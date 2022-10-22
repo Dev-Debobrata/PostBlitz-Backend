@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  mongo: 
+    image: bitnami/mongodb:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=desturctor
+      - MONGO_INITDB_ROOT_PASSWORD=destructor
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+    volumes:
+      - ./db_data:/data/db
+  
+  mongoGUI:
+    image: mongo-express:latest
+    container_name: db_gui
+    restart: unless-stopped
+    depends_on: 
+     - mongo
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+    volumes:
+      - ./db_data:/data/db
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=destructor
+      - ME_CONFIG_BASICAUTH_PASSWORD=destructor
+
+volumes:
+  db_data: {}
+networks:
+  backend:

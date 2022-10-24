@@ -1,0 +1,6 @@
+GET http://localhost:9000/api/users
+
+Content-Type: application/json
+{
+    "username": "some username"
+}

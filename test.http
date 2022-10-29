@@ -2,5 +2,20 @@ GET http://localhost:9000/api/users
 
 Content-Type: application/json
 {
-    "username": "some username"
+    "username": "destructor9804"
+}
+
+###
+
+POST http://localhost:9000/api/users
+
+Content-Type: application/json
+{
+    "name": "some name",
+    "username": "some username",
+    "password": "abcdefgh",
+    "email": "abcdfff@gmail.com",
+    "address": "dfjhkfhjkd wfsdjwdfjhkls  ldrfhjfewqif hefwdfskjhffsnef",
+    "pincode": "345879",
+    "country": "india"
 }

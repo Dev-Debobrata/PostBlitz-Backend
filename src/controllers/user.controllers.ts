@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
+import { HydratedDocument } from "mongoose"
 import { User } from "../models/user.model";
 import { IUser } from "../utils/typings";
 import { passHash } from "../utils/passHashing";
+import { generateToken } from "../utils/token";
+
 
 export const getUser = async (req: Request, res: Response) => {
   try {
@@ -15,7 +18,9 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 
+
 export const postUser = async (req: Request, res: Response) => {
+
   const {
     name,
     username,
@@ -23,37 +28,43 @@ export const postUser = async (req: Request, res: Response) => {
     email,
     address,
     pincode,
-    country,
+    country
   } = req.body;
 
-  const foundUser = await User.findOne(username);
+  console.log(name, username, password, email, address, pincode, country); // Console-log
+
+  const foundUser = await User.findOne(req.body.username);
   if (foundUser) {
     return res.status(400).json({
       message: "Username already exists",
     });
   }
-  const user: IUser = new User({
+  // const hashedPass = passHash(password)
+  
+  const user: HydratedDocument<IUser> = new User({
     name,
     username,
-    password: passHash,
+    password,
     email,
     address,
     pincode,
     country
   })
-  // try {
-  //   const token = generateToken(user);
-  //   await user.save();
-  //   res.cookie("userToken", token, {
-  //       httpOnly: true,
-  //       maxAge: 1000 * 60 * 60,
-  //     })
-  //     .status(201)
-  //     .json({
-  //       message: "User created successfully"
-  //     });
-  //   console.log(token);
-  // } catch (error) {
-  //   res.status(500).send(error);
-  // }
+
+  console.log(user) // console.log
+  try {
+    const token = generateToken(user);
+    await user.save();
+    res.cookie("userToken", token, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      })
+      .status(201)
+      .json({
+        message: "User created successfully"
+      });
+    console.log(token);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 }

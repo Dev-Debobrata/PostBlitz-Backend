@@ -12,7 +12,7 @@ connectToDatabase()
   .then(() => console.log("Connected to database"))
   .catch((err) => console.log(err));
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/api", userRouter)
 

@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { IUser } from "../utils/typings"
 
 
-const userSchema= new Schema<IUser>({
+const userSchema = new Schema<IUser>({
     name: {
         type: "string",
         required: true,
@@ -14,6 +14,10 @@ const userSchema= new Schema<IUser>({
     password: {
         type: "string",
         required: true,
+    },
+    image: {
+        data: Buffer,
+        contentType: "String"
     },
     email: {
         type: "string",

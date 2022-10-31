@@ -1,6 +1,6 @@
 GET http://localhost:9000/api/users
-
 Content-Type: application/json
+
 {
     "username": "destructor9804"
 }
@@ -8,14 +8,14 @@ Content-Type: application/json
 ###
 
 POST http://localhost:9000/api/users
-
 Content-Type: application/json
+
 {
-    "name": "some name",
-    "username": "some username",
-    "password": "abcdefgh",
-    "email": "abcdfff@gmail.com",
-    "address": "dfjhkfhjkd wfsdjwdfjhkls  ldrfhjfewqif hefwdfskjhffsnef",
-    "pincode": "345879",
-    "country": "india"
+    "name": "Debobrata Pal",
+    "username": "destructor9804",
+    "password": "DestructorIsHere",
+    "email": "destructor9804@gmail.com",
+    "address": "Kankinara, West Bengal",
+    "pincode": 743126,
+    "country": "India"
 }

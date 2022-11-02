@@ -1,7 +1,7 @@
-import { compare, genSalt, hash } from 'bcrypt';
+import { genSalt, hash } from 'bcrypt';
 
-export const passHash = async (password: string): Promise<any> => {
+export const passHash = async (password: string): Promise<string> => {
     const salt = await genSalt(10);
     const hashed = await hash(password, salt);
-    return hashed;
+    return hashed.toString();
 }

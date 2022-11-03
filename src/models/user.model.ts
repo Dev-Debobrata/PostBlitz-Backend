@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "../utils/typings";
-import { Blog } from "./blog.model";
 
 const userSchema = new Schema<IUser>({
   name: {
@@ -35,9 +34,11 @@ const userSchema = new Schema<IUser>({
     type: "string",
     required: true,
   },
-  // blogs: {
-  //   blogID: Blog.id,
-  // },
+  blogs: [{
+    type: Schema.Types.ObjectId,
+    ref: "Blog",
+    required: false,
+  }]
 });
 
 export const User = model<IUser>("User", userSchema);

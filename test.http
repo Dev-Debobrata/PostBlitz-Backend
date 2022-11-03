@@ -19,3 +19,11 @@ Content-Type: application/json
     "pincode": 743126,
     "country": "India"
 }
+
+###
+GET http://localhost:9000/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Blog 1"
+}

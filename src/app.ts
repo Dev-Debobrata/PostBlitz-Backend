@@ -6,6 +6,8 @@ import express, {
   urlencoded
 } from "express";
 import { userRouter } from "./routes/user.routes";
+import { blogRouter } from "./routes/blog.routes";
+
 import { connectToDatabase } from "./utils/dbConfig";
 
 export const app: Application = express();
@@ -16,7 +18,8 @@ connectToDatabase()
 
 app.use(urlencoded({ extended: true }));
 app.use(json());
-app.use("/api", userRouter)
+app.use("/api", userRouter);
+app.use("/api", blogRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello world!");

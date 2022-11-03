@@ -1,7 +1,8 @@
 import { Request, response, Response } from "express";
 import { HydratedDocument } from "mongoose";
 import { User } from "../models/user.model";
-import { IUser } from "../utils/typings";
+import { Blog } from "../models/blog.model";
+import { IBlog, IUser } from "../utils/typings";
 import { passHash } from "../utils/passHashing";
 import { generateToken } from "../utils/token";
 import { upload } from "../utils/multerConfig";
@@ -10,11 +11,9 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { username } = req.body;
 
-    const user = await User.findOne<IUser>({ username });
-    res.status(200).json({
-      name: user?.name,
-      username: user?.username,
-    });
+    // const user = await User.findOne<IUser>({ username });
+    const result = await User.findOne<IUser>({ username }).populate("blogs", "-_id-userID")
+    res.status(200).json(result);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

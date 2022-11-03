@@ -8,21 +8,18 @@ export type IUser = {
     address: String,
     pincode: Number,
     country: String,
-    blogs: {
-        blogID: String
-    }
+    blogs: String[]
 }
 
-export type IBlogs = {
+export type IBlog = {
     id: String,
-    user: {
-        username: String,
-    },
+    userID: String,
     title: String,
     description: String,
     content: String,
-    images: String,
-    hyperlinks: String,
+    images: String[],
+    urls: String[],
     likes: Number,
     shareLink: string,
 }
+

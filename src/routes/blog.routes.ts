@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { getBlog } from "../controllers/blog.controllers";
+import { getBlog, getBlogs } from "../controllers/blog.controllers";
 
 export const blogRouter = Router()
 
-blogRouter.get("/blogs", getBlog);
+blogRouter.get("/blogs", getBlogs);
+blogRouter.get("/blogs/:title", getBlog);

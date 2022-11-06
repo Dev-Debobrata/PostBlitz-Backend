@@ -13,7 +13,7 @@ export type IUser = {
 
 export type IBlog = {
     id: String,
-    userID: String,
+    author: String,
     title: String,
     description: String,
     content: String,

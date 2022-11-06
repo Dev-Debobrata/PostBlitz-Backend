@@ -3,7 +3,7 @@ import { IBlog } from "../utils/typings";
 
 
 const blogSchema= new Schema<IBlog>({
-    userID: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,

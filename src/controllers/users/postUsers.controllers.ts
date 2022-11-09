@@ -1,10 +1,9 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
 import { passHash } from "../../middleware/passHashing";
 import { generateToken } from "../../middleware/token";
-import { upload } from "../../middleware/multerConfig";
 
 export const postUser = async (req: Request, res: Response): Promise<any> => {
   try {

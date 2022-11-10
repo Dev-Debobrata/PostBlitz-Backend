@@ -17,6 +17,7 @@ export type IBlog = {
     title: String,
     description: String,
     content: String,
+    categories: String[],
     images: String[],
     urls: String[],
     likes: Number,

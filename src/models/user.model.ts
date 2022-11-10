@@ -3,42 +3,44 @@ import { IUser } from "../utils/typings";
 
 const userSchema = new Schema<IUser>({
   name: {
-    type: "string",
+    type: String,
     required: true,
   },
   username: {
-    type: "string",
+    type: String,
     required: true,
   },
   password: {
-    type: "string",
+    type: String,
     required: true,
   },
   image: {
     data: Buffer,
-    contentType: "String",
+    contentType: String,
   },
   email: {
-    type: "string",
+    type: String,
     required: true,
   },
   address: {
-    type: "string",
+    type: String,
     required: true,
   },
   pincode: {
-    type: "number",
+    type: String,
     required: true,
   },
   country: {
-    type: "string",
+    type: String,
     required: true,
   },
-  blogs: [{
-    type: Schema.Types.ObjectId,
-    ref: "Blog",
-    required: false,
-  }]
+  blogs: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Blog",
+      required: false,
+    },
+  ],
 });
 
 export const User = model<IUser>("User", userSchema);

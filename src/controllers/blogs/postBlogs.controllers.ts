@@ -1,18 +1,26 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
-import { userInfo } from "os";
 import { Blog } from "../../models/blog.model";
-import { IBlog, IUser } from "../../utils/typings";
+import { IBlog } from "../../utils/typings";
 
 export const postBlog = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { title, description, content, images, urls, shareLink, author } =
-      req.body;
+    const {
+      title,
+      description,
+      content,
+      categories,
+      images,
+      urls,
+      shareLink,
+      author,
+    } = req.body;
 
     const blog: HydratedDocument<IBlog> = new Blog({
       title,
       description,
       content,
+      categories,
       images,
       urls,
       shareLink,

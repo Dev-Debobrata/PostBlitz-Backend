@@ -1,42 +1,51 @@
 import { Schema, model } from "mongoose";
 import { IBlog } from "../utils/typings";
 
-
-const blogSchema= new Schema<IBlog>({
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+const blogSchema = new Schema<IBlog>({
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  categories: [
+    {
+      type: String,
+      required: true,
     },
-    title: {
-        type: "string",
-        required: true,
+  ],
+  images: [
+    {
+      data: Buffer,
+      contentType: String,
+      required: false,
     },
-    description: {
-        type: "string",
-        required: true
+  ],
+  urls: [
+    {
+      body: String,
+      required: false,
     },
-    content: {
-        type: "string",
-        required: true
-    },
-    images: [{
-        data: Buffer,
-        contentType: "String",
-        required: false,
-    }],
-    urls: [{
-        body: "string",
-        required: false
-    }],
-    likes: {
-        type: "string",
-        default: 0,
-    },
-    shareLink: {
-        type: "string",
-        required: true
-    }
+  ],
+  likes: {
+    type: String,
+    default: 0,
+  },
+  shareLink: {
+    type: String,
+    required: true,
+  },
 });
 
-export const Blog = model<IBlog>("Blog", blogSchema)
+export const Blog = model<IBlog>("Blog", blogSchema);

@@ -12,8 +12,8 @@ import {
 export const userRouter = Router();
 
 userRouter.get("/users", getUsers);
-userRouter.get("/user/id/:_id", getUserByID);
-userRouter.get("/user/username/:username", getUserByUsername);
+userRouter.get("/users/id/:_id", getUserByID);
+userRouter.get("/users/username/:username", getUserByUsername);
 
 userRouter.post("/users/register", postUser);
 userRouter.post("/users/login", loginUser);

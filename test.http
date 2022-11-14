@@ -1,29 +1,65 @@
+
 GET http://localhost:9000/api/users
+
+###
+
+GET http://localhost:9000/api/users/id/USERID
+
+###
+
+GET http://localhost:9000/api/users/username/USERNAME
+
+###
+
+POST http://localhost:9000/api/users/register
 Content-Type: application/json
 
 {
-    "username": "destructor9804"
+  "name": "Debobrata Pal",
+  "username": "destructor9804",
+  "password": "destructorIsHere",
+  "email": "destructor9804@gmail.com",
+  "address": "Madral, 2No Rabindra Pally",
+  "pincode": "743126",
+  "country": "India"
 }
 
 ###
 
-POST http://localhost:9000/api/users
-Content-Type: application/json
+POST http://localhost:9000/api/users/login
 
+Content-Type: application/json
 {
-    "name": "Debobrata Pal",
-    "username": "destructor9804",
-    "password": "DestructorIsHere",
-    "email": "destructor9804@gmail.com",
-    "address": "Kankinara, West Bengal",
-    "pincode": 743126,
-    "country": "India"
+  "username": "destructor9804",
+  "password": "destructorIsHere"
 }
 
 ###
+
 GET http://localhost:9000/api/blogs
+
+###
+
+GET http://localhost:9000/api/blogs/id/BLOGID
+
+###
+
+GET http://localhost:9000/api/blogs/title/BLOGTITLE
+
+###
+
+GET http://localhost:9000/api/blogs/category/BLOGCATEGORY
+
+###
+
+POST http://localhost:9000/api/blogs/create
 Content-Type: application/json
 
 {
-    "title": "Blog 1"
+  "title": "Blog 1",
+  "author": "",
+  "description": "This is blog 1",
+  "content": "This is blog 1",
+  "categories": ["sci-fi", "fantasy"],
+  "shareLink": "sharelink"
 }

@@ -38,10 +38,13 @@ const blogSchema = new Schema<IBlog>({
       required: false,
     },
   ],
-  likes: {
-    type: String,
-    default: 0,
-  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+  ],
   shareLink: {
     type: String,
     required: true,

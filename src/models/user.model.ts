@@ -36,9 +36,15 @@ const userSchema = new Schema<IUser>({
   },
   blogs: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Blog",
-      required: false,
+      blogID: {
+        type: Schema.Types.ObjectId,
+        ref: "Blog",
+        required: false,
+      },
+      liked: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
 });

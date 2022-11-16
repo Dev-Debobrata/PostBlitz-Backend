@@ -36,17 +36,26 @@ const userSchema = new Schema<IUser>({
   },
   blogs: [
     {
-      blogID: {
-        type: Schema.Types.ObjectId,
-        ref: "Blog",
-        required: false,
-      },
-      liked: {
-        type: Boolean,
-        default: false,
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Blog",
+      required: false,
     },
   ],
+  likedBlogs: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Blog",
+      required: false,
+    },
+  ],
+  created_At: {
+    type: Date,
+    required: true,
+  },
+  updated_At: {
+    type: Date,
+    required: true,
+  },
 });
 
 export const User = model<IUser>("User", userSchema);

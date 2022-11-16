@@ -4,7 +4,7 @@ import * as dotenv from "dotenv";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
 import { IsValidUser, passHash } from "../../middleware/passHashing";
-import { generateToken } from "../../middleware/token";
+import { generateUserToken } from "../../middleware/token";
 import { transporter } from "../../middleware/nodemailerConfig";
 dotenv.config({ path: __dirname + "/../../.env" });
 
@@ -32,8 +32,10 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
       address,
       pincode,
       country,
+      created_At: Date.now(),
+      updated_At: Date.now(),
     });
-    const token = generateToken(user);
+    const token = generateUserToken(user);
     await user.save();
     const mailBody = {
       from: AUTH_EMAIL,
@@ -82,4 +84,4 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}; // Need To Refresh Token and send it as cookie
+}; // Need To add Refresh Token and send it as cookie

@@ -49,6 +49,14 @@ const blogSchema = new Schema<IBlog>({
     type: String,
     required: true,
   },
+  created_At: {
+    type: Date,
+    required: true,
+  },
+  updated_At: {
+    type: Date,
+    required: true,
+  },
 });
 
 export const Blog = model<IBlog>("Blog", blogSchema);

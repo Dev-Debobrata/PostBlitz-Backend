@@ -25,6 +25,8 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
       urls,
       shareLink,
       author,
+      createdAt: Date.now(),
+      updated_At: Date.now(),
     });
     await blog.save();
     res.status(201).json({ message: "Blog Added Successfully" });

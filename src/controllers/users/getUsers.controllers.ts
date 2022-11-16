@@ -6,7 +6,7 @@ export const getUsers = async (req: Request, res: Response): Promise<any> => {
   try {
     const users: Array<IUser> | null = await User.find(
       {},
-      "name username country"
+      "name username country created_At updated_At"
     ).populate("blogs", "-author");
     if (users === null) {
       return res.status(404).json({ message: "User not found" });

@@ -7,7 +7,7 @@ GET http://localhost:9000/api/users/id/USERID
 
 ###
 
-GET http://localhost:9000/api/users/username/USERNAME
+GET http://localhost:9000/api/users/username/jphn777
 
 ###
 
@@ -15,23 +15,23 @@ POST http://localhost:9000/api/users/register
 Content-Type: application/json
 
 {
-  "name": "Debobrata Pal",
-  "username": "destructor9804",
-  "password": "destructorIsHere",
-  "email": "destructor9804@gmail.com",
-  "address": "Madral, 2No Rabindra Pally",
-  "pincode": "743126",
-  "country": "India"
+  "name": "John Doe",
+  "username": "jphn777",
+  "password": "johnIsHere",
+  "email": "john777@gmail.com",
+  "address": "Dublin",
+  "pincode": "112233",
+  "country": "Ireland"
 }
 
 ###
 
 POST http://localhost:9000/api/users/login
-
 Content-Type: application/json
+
 {
-  "username": "destructor9804",
-  "password": "destructorIsHere"
+  "username": "jphn777",
+  "password": "johnIsHere"
 }
 
 ###
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 {
   "title": "Blog 1",
-  "author": "",
+  "author": "63728771a0f61112a4716c8f",
   "description": "This is blog 1",
   "content": "This is blog 1",
   "categories": ["sci-fi", "fantasy"],

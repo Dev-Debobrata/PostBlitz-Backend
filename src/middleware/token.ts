@@ -4,16 +4,29 @@ import { IUser } from "../utils/typings";
 
 dotenv.config({ path: __dirname + "/../.env" });
 
-const ACCESS_TOKEN_SECRET: Secret = `${process.env.ACCESS_TOKEN_SECRET}`;
+const USER_ACCESS_TOKEN_SECRET: Secret = `${process.env.USER_ACCESS_TOKEN_SECRET}`;
+const ADMIN_ACCESS_TOKEN_SECRET: Secret = `${process.env.ADMIN_ACCESS_TOKEN_SECRET}`;
 
-export const generateToken = async (user: IUser) => {
+export const generateUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
       username: user.username,
     },
     options = {
-      expiresIn: "1d",
+      expiresIn: "30d",
     };
-  const token = await jwt.sign(payload, ACCESS_TOKEN_SECRET, options);
+  const token = await jwt.sign(payload, USER_ACCESS_TOKEN_SECRET, options);
+
+  return token;
+};
+
+export const generateAdminToken = async (user: IUser) => {
+  const payload: JwtPayload = {
+      username: user.username,
+    },
+    options = {
+      expiresIn: "6h",
+    };
+  const token = await jwt.sign(payload, ADMIN_ACCESS_TOKEN_SECRET, options);
 
   return token;
 };

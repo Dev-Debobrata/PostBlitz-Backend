@@ -8,10 +8,10 @@ export type IUser = {
   address: String;
   pincode: Number;
   country: String;
-  blogs: {
-    blogID: String;
-    liked: Boolean;
-  };
+  blogs: String[];
+  likedBlogs: String[];
+  created_At: Date;
+  updated_At: Date;
 };
 
 export type IBlog = {
@@ -25,4 +25,6 @@ export type IBlog = {
   urls: String[];
   likes: String[];
   shareLink: string;
+  created_At: Date;
+  updated_At: Date;
 };

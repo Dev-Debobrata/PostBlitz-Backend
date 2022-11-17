@@ -9,6 +9,7 @@ import { userRouter } from "./routes/user.routes";
 import { blogRouter } from "./routes/blog.routes";
 
 import { connectToDatabase } from "./utils/dbConfig";
+import cookieParser from "cookie-parser";
 
 export const app: Application = express();
 

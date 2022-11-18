@@ -2,6 +2,10 @@ import { Schema, model } from "mongoose";
 import { IUser } from "../utils/typings";
 
 const userSchema = new Schema<IUser>({
+  sessionId: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
 import * as dotenv from "dotenv";
+import { randomBytes } from "crypto";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
 import { IsValidUser, passHash } from "../../middleware/passHashing";
-import { generateUserToken } from "../../middleware/token";
+import { generateUserToken, RefreshUserToken } from "../../middleware/token";
 import { transporter } from "../../middleware/nodemailerConfig";
 dotenv.config({ path: __dirname + "/../../.env" });
 
@@ -21,10 +22,11 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
         message: "Username already exists",
       });
     }
-
+    const sessionId = randomBytes(16).toString("hex");
     const hashedPass = await passHash(password);
 
     const user: HydratedDocument<IUser> = new User({
+      sessionId: sessionId,
       name,
       username,
       password: hashedPass,
@@ -51,9 +53,9 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
         return res.status(500).json({ message: error.message });
       }
       res
-        .cookie("userToken", token, {
+        .cookie("sessionId", token, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24,
+          maxAge: 1000 * 60 * 60 * 24 * 30,
         })
         .status(201)
         .json({
@@ -69,6 +71,11 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
 export const loginUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { username, password } = req.body;
+    const sessionId = req.cookies.sessionId;
+
+    if (sessionId) {
+      return res.status(302).json({ message: "Token Already Exist" });
+    }
 
     const findUser: IUser | null = await User.findOne({ username });
     if (findUser === null) {
@@ -80,8 +87,17 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     if (result === false) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
-    res.status(200).json({ message: "Login Successful" });
+    const refreshToken = RefreshUserToken(findUser);
+    res
+      .cookie("sessionId", refreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+      })
+      .status(201)
+      .json({
+        message: "Logged In Successfully",
+      });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}; // Need To add Refresh Token and send it as cookie
+};

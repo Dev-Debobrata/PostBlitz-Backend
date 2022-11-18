@@ -19,6 +19,7 @@ connectToDatabase()
 
 app.use(urlencoded({ extended: true }));
 app.use(json());
+app.use(cookieParser());
 app.use("/api", userRouter);
 app.use("/api", blogRouter);
 

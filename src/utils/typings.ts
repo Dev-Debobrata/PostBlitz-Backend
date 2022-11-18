@@ -1,5 +1,6 @@
 export type IUser = {
   id: String;
+  sessionId: String;
   name: String;
   username: String;
   password: String;

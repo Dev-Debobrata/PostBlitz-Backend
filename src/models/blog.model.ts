@@ -32,29 +32,16 @@ const blogSchema = new Schema<IBlog>({
       required: false,
     },
   ],
-  urls: [
-    {
-      body: String,
-      required: false,
-    },
-  ],
-  likes: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: false,
-    },
-  ],
-  shareLink: {
-    type: String,
-    required: true,
+  likes: {
+    type: Number,
+    default: 0,
   },
   created_At: {
-    type: Date,
+    type: Number,
     required: true,
   },
   updated_At: {
-    type: Date,
+    type: Number,
     required: true,
   },
 });

@@ -7,32 +7,24 @@ import { IBlog, IUser } from "../../utils/typings";
 
 export const postBlog = async (req: Request, res: Response): Promise<any> => {
   try {
-    // const sessionId = req.headers.cookie;
-    // if (!sessionId) {
-    //   return res.status(302).json({ message: "Please Log In" });
-    // }
+    const userToken = req.cookies.sessionId;
+    if (!userToken) {
+      return res.status(302).json({ message: "Please Log In" });
+    }
+    console.log(userToken);
     // const verifiedToken = await verifyUserToken(sessionId);
     // if (!verifiedToken) {
     //   return res.status(403).json({ message: "Bad Credentials" });
     // }
     // console.log(verifiedToken)
-    // console.log(sessionId);
     // const getAuthor: IUser | null = await User.findOne({
     //   sessionId: sessionId,
     // });
     // if (getAuthor === null) {
     //   return res.status(404).json({ message: "User Not Found" });
     // }
-    const {
-      title,
-      author,
-      description,
-      content,
-      categories,
-      images,
-      urls,
-      shareLink,
-    } = req.body;
+    const { title, author, description, content, categories, images } =
+      req.body;
 
     const blog: HydratedDocument<IBlog> = new Blog({
       title,
@@ -40,8 +32,6 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
       content,
       categories,
       images,
-      urls,
-      shareLink,
       author,
       created_At: Date.now(),
       updated_At: Date.now(),

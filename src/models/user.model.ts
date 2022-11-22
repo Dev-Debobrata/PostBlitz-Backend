@@ -53,11 +53,11 @@ const userSchema = new Schema<IUser>({
     },
   ],
   created_At: {
-    type: Date,
+    type: Number,
     required: true,
   },
   updated_At: {
-    type: Date,
+    type: Number,
     required: true,
   },
 });

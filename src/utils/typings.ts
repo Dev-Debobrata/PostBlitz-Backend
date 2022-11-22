@@ -11,8 +11,8 @@ export type IUser = {
   country: String;
   blogs: String[];
   likedBlogs: String[];
-  created_At: Date;
-  updated_At: Date;
+  created_At: Number;
+  updated_At: Number;
 };
 
 export type IBlog = {
@@ -23,9 +23,7 @@ export type IBlog = {
   content: String;
   categories: String[];
   images: String[];
-  urls: String[];
-  likes: String[];
-  shareLink: string;
-  created_At: Date;
-  updated_At: Date;
+  likes: Number;
+  created_At: Number;
+  updated_At: Number;
 };

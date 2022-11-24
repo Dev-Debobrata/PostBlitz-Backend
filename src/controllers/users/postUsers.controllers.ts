@@ -37,7 +37,7 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
       created_At: Date.now(),
       updated_At: Date.now(),
     });
-    const token = generateUserToken(user);
+    const token = await generateUserToken(user);
     await user.save();
     const mailBody = {
       from: AUTH_EMAIL,
@@ -52,15 +52,11 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
       if (error) {
         return res.status(500).json({ message: error.message });
       }
-      res
-        .cookie("sessionId", token, {
-          httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 30,
-        })
-        .status(201)
-        .json({
-          message: "User created successfully",
-        });
+      res.cookie("sessionId", token, {
+        httpOnly: true,
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+      }).status(201).json({ message: "User Added Successfully" });
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

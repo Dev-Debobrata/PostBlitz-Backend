@@ -7,22 +7,20 @@ import { IBlog, IUser } from "../../utils/typings";
 
 export const postBlog = async (req: Request, res: Response): Promise<any> => {
   try {
-    const userToken = req.cookies.sessionId;
-    if (!userToken) {
+    const sessionToken = req.cookies.sessionId;
+    if (!sessionToken) {
       return res.status(302).json({ message: "Please Log In" });
     }
-    console.log(userToken);
-    // const verifiedToken = await verifyUserToken(sessionId);
-    // if (!verifiedToken) {
-    //   return res.status(403).json({ message: "Bad Credentials" });
-    // }
-    // console.log(verifiedToken)
-    // const getAuthor: IUser | null = await User.findOne({
-    //   sessionId: sessionId,
-    // });
-    // if (getAuthor === null) {
-    //   return res.status(404).json({ message: "User Not Found" });
-    // }
+
+    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+
+    const getAuthor: IUser | null = await User.findOne({
+      sessionId: verifiedToken?.userId,
+    });
+    if (getAuthor === null) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+
     const { title, author, description, content, categories, images } =
       req.body;
 
@@ -41,4 +39,4 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}; // Need to get session id back from token
+};

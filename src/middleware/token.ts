@@ -10,7 +10,7 @@ const USER_REFRESH_TOKEN_SECRET: Secret = `${process.env.USER_REFRESH_TOKEN_SECR
 
 export const generateUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
-      username: user.sessionId,
+      userId: user.sessionId,
     },
     options = {
       expiresIn: "30d",
@@ -22,7 +22,7 @@ export const generateUserToken = async (user: IUser) => {
 
 export const refreshAdminToken = async (user: IUser) => {
   const payload: JwtPayload = {
-      username: user.sessionId,
+      userId: user.sessionId,
     },
     options = {
       expiresIn: "6h",
@@ -34,7 +34,7 @@ export const refreshAdminToken = async (user: IUser) => {
 
 export const RefreshUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
-      username: user.sessionId,
+      userId: user.sessionId,
     },
     options = {
       expiresIn: "30d",
@@ -45,6 +45,10 @@ export const RefreshUserToken = async (user: IUser) => {
 };
 
 export const verifyUserToken = async (token: any) => {
-  const verified = await verify(token, USER_ACCESS_TOKEN_SECRET || USER_REFRESH_TOKEN_SECRET);
+  const verified = await verify(
+    token,
+    USER_ACCESS_TOKEN_SECRET || USER_REFRESH_TOKEN_SECRET
+  );
+
   return verified;
-}
+};

@@ -1,10 +1,14 @@
 import { Router } from "express";
+import { deleteUser } from "../controllers/users/deleteUsers.controllers";
 import {
   getUserByID,
   getUserByUsername,
-  getUsers,
 } from "../controllers/users/getUsers.controllers";
-import { patchUserLikes } from "../controllers/users/patchUsers.controllers";
+import {
+  patchUserData,
+  patchUserLikes,
+  patchUserPassword,
+} from "../controllers/users/patchUsers.controllers";
 import {
   postUser,
   loginUser,
@@ -12,11 +16,14 @@ import {
 
 export const userRouter = Router();
 
-userRouter.get("/users", getUsers);
-userRouter.get("/users/id/:_id", getUserByID);
+userRouter.get("/user", getUserByID);
 userRouter.get("/users/username/:username", getUserByUsername);
 
 userRouter.post("/users/register", postUser);
 userRouter.post("/users/login", loginUser);
 
-userRouter.patch("/users/update/likes/:_id", patchUserLikes);
+userRouter.patch("/users/update/details", patchUserData);
+userRouter.patch("/users/update/password", patchUserPassword);
+userRouter.patch("/users/update/like", patchUserLikes);
+
+userRouter.delete("/users/delete", deleteUser);

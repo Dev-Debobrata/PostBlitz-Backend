@@ -52,11 +52,14 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
       if (error) {
         return res.status(500).json({ message: error.message });
       }
-      res.cookie("sessionId", token, {
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-      }).status(201).json({ message: "User Added Successfully" });
+      res
+        .cookie("sessionId", token, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+        })
+        .status(201)
+        .json({ message: "User Added Successfully" });
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -73,17 +76,29 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
       return res.status(302).json({ message: "Token Already Exist" });
     }
 
-    const findUser: IUser | null = await User.findOne({ username });
+    const newSessionId = randomBytes(16).toString("hex");
+
+    const findUser: IUser | null = await User.findOneAndUpdate(
+      { username: username },
+      {
+        sessionId: newSessionId,
+        updated_At: Date.now(),
+      }
+    );
+
     if (findUser === null) {
       return res.status(404).json({ message: "user does not exist" });
     }
+
     const userPassword = findUser.password.toString();
 
     const result = await IsValidUser(password, userPassword);
     if (result === false) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
-    const refreshToken = RefreshUserToken(findUser);
+
+    const refreshToken = await RefreshUserToken(findUser);
+
     res
       .cookie("sessionId", refreshToken, {
         httpOnly: true,

@@ -1,5 +1,5 @@
 export type IUser = {
-  id: String;
+  _id: String;
   sessionId: String;
   name: String;
   username: String;
@@ -16,7 +16,7 @@ export type IUser = {
 };
 
 export type IBlog = {
-  id: String;
+  _id: String;
   author: String;
   title: String;
   description: String;
@@ -24,6 +24,21 @@ export type IBlog = {
   categories: String[];
   images: String[];
   likes: Number;
+  created_At: Number;
+  updated_At: Number;
+};
+
+export type IAdmin = {
+  _id: String;
+  sessionId: String;
+  name: String;
+  username: String;
+  password: String;
+  image: String;
+  email: String;
+  address: String;
+  pincode: Number;
+  country: String;
   created_At: Number;
   updated_At: Number;
 };

@@ -10,6 +10,7 @@ import { blogRouter } from "./routes/blog.routes";
 
 import { connectToDatabase } from "./utils/dbConfig";
 import cookieParser from "cookie-parser";
+import { adminRouter } from "./routes/admin.routes";
 
 export const app: Application = express();
 
@@ -20,6 +21,7 @@ connectToDatabase()
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cookieParser());
+app.use("/api", adminRouter);
 app.use("/api", userRouter);
 app.use("/api", blogRouter);
 

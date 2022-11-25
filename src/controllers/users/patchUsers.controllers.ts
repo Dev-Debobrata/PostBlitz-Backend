@@ -1,28 +1,116 @@
 import { Request, Response } from "express";
+import { IsValidUser } from "../../middleware/passHashing";
+import { verifyUserToken } from "../../middleware/token";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
 
-export const patchUserLikes = async (req: Request, res: Response): Promise<any> => {
+export const patchUserLikes = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
-    const { _id } = req.params;
-    const { likedBlogs } = req.body;
-
-    const user: IUser | null = await User.findOne({ _id: _id });
-    if (user === null) {
-      return res.status(404).json({ message: "User not found" });
+    const sessionToken = req.cookies.sessionId;
+    if (!sessionToken) {
+      return res.status(302).json({ message: "Please Log In" });
     }
-    const likeUpdated = await User.updateMany(
+
+    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+
+    const { likedBlog } = req.body;
+
+    const likedUser: IUser | null = await User.findOneAndUpdate(
       {
-        likedBlogs: likedBlogs,
-        updated_At: Date.now(),
+        sessionId: verifiedToken?.userId,
       },
-      (err: any) => {
-        if (!err) {
-          return res.status(400).json({ message: "Like Added successfully" });
-        }
+      {
+        likedBlogs: likedBlog,
+        updated_At: Date.now(),
       }
     );
+    if (likedUser === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(400).json({ message: "Like Added successfully" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}; // Work On progress
+}; // needs to be tested
+
+export const patchUserData = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const sessionToken = req.cookies.sessionId;
+    if (!sessionToken) {
+      return res.status(302).json({ message: "Please Log In" });
+    }
+
+    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+
+    const { name, username, country, email, pincode, address } = req.body;
+
+    const updateUser: IUser | null = await User.findOneAndUpdate(
+      {
+        sessionId: verifiedToken?.userId,
+      },
+      {
+        name: name,
+        username: username,
+        country: country,
+        email: email,
+        pincode: pincode,
+        address: address,
+        updated_At: Date.now(),
+      }
+    );
+    if (updateUser === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(400).json({ message: "Data Updated successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const patchUserPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const sessionToken = req.cookies.sessionId;
+    if (!sessionToken) {
+      return res.status(302).json({ message: "Please Log In" });
+    }
+
+    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+
+    const { password, newPassword } = req.body;
+
+    const updateUser: IUser | null = await User.findOne({
+      sessionId: verifiedToken?.userId,
+    });
+    if (updateUser === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userPassword = updateUser.password.toString();
+
+    const result = await IsValidUser(password, userPassword);
+    if (result === false) {
+      return res.status(401).json({ message: "Invalid Credentials" });
+    }
+    const updatedPassword = await User.findOneAndUpdate(
+      {
+        sessionId: verifiedToken?.userId,
+      },
+      {
+        password: newPassword,
+      }
+    );
+
+    res.status(400).json({ message: "Data Updated successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

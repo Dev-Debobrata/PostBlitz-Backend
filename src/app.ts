@@ -16,7 +16,7 @@ export const app: Application = express();
 
 connectToDatabase()
   .then(() => console.log("Connected to database"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));
 
 app.use(urlencoded({ extended: true }));
 app.use(json());

@@ -28,4 +28,4 @@ export const filesUpload = async (files: Array<Express.Multer.File>) => {
     params.map((param) => s3.upload(param).promise())
   );
   return results;
-};
+}; // Not been tested

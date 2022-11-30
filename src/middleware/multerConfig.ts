@@ -1,6 +1,10 @@
 import { Request } from "express";
 import multer, { diskStorage } from "multer";
+import * as dotenv from "dotenv";
+import multerS3 from "multer-s3";
 import { v4 } from "uuid";
+import { s3 } from "../utils/s3Config";
+dotenv.config({ path: __dirname + "/../.env" });
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
@@ -18,6 +22,18 @@ const dpStorage = diskStorage({
     cb(null, `${v4()}-${originalname}`);
   },
 });
+
+// const dpStorage = multerS3({
+// @ts-ignore
+// s3: s3,
+// bucket: `${process.env.AWS_S3_BUCKET_NAME}`,
+// metadata: function (req, file, cb) {
+//   cb(null, { fieldName: file.fieldname });
+// },
+// key: function (req, file, cb) {
+//   cb(null, Date.now().toString());
+// },
+// })
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: any) => {
   if (

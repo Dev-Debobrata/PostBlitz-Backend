@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
+import { filesUpload } from "../../middleware/fileHandlers";
 import { verifyUserToken } from "../../middleware/token";
 import { Blog } from "../../models/blog.model";
 import { User } from "../../models/user.model";
@@ -21,22 +22,29 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
-    const { title, author, description, content, categories, images } =
+    const { title, description, content, categories, images } =
       req.body;
+    
+    const files = req.files;
+    
+    //@ts-ignore
+    // const result = await filesUpload(files)
+    // console.log(result)
 
-    const blog: HydratedDocument<IBlog> = new Blog({
-      title,
-      description,
-      content,
-      categories,
-      images,
-      author,
-      created_At: Date.now(),
-      updated_At: Date.now(),
-    });
-    await blog.save();
-    res.status(201).json({ message: "Blog Added Successfully" });
+    // const blog: HydratedDocument<IBlog> = new Blog({
+    //   title,
+    //   description,
+    //   content,
+    //   categories,
+    //   images,
+    //   author: getAuthor._id.toString(),
+    //   created_At: Date.now(),
+    //   updated_At: Date.now(),
+    // });
+    // await blog.save();
+    // res.status(201).json({ message: "Blog Added Successfully" });
+    res.status(201).send(files);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-};
+}; // Getting req.files as undefined

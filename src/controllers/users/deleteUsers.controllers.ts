@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { IsValidUser } from "../../middleware/passHashing";
 import { verifyUserToken } from "../../middleware/token";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
@@ -19,7 +20,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
-    const { username } = req.body;
+    const { username, password } = req.body;
 
     const findUser: IUser | null = await User.findOne({ username: username });
     if (findUser === null) {
@@ -29,6 +30,14 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
     if (findUser?.username !== getUser?.username) {
       return res.status(403).json({ message: "Unauthorized" });
     }
+
+    const userPassword = findUser.password.toString();
+
+    const result = await IsValidUser(password, userPassword);
+    if (result === false) {
+      return res.status(401).json({ message: "Invalid Credentials" });
+    }
+
     await User.deleteOne({ username: username });
     res.status(201).json({ message: "User Deleted Successfully" });
   } catch (error: any) {

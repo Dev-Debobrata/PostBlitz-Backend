@@ -27,8 +27,7 @@ const blogSchema = new Schema<IBlog>({
   ],
   images: [
     {
-      data: Buffer,
-      contentType: String,
+      type: String,
       required: false,
     },
   ],

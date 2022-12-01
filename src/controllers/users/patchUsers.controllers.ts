@@ -1,6 +1,4 @@
-import { File } from "aws-sdk/clients/codecommit";
 import { Request, Response } from "express";
-import { fileUpload } from "../../middleware/fileHandlers";
 import { IsValidUser } from "../../middleware/passHashing";
 import { verifyUserToken } from "../../middleware/token";
 import { User } from "../../models/user.model";
@@ -135,25 +133,19 @@ export const patchUserImage = async (
     if (updateUser === null) {
       return res.status(404).json({ message: "User not found" });
     }
+    const file = <Express.MulterS3.File | undefined>req.file;
 
-    const file = req.file;
-    console.log(file);
-    
-    //@ts-ignore
-    // const result = await fileUpload(file);
+    const updatedImage = await User.findOneAndUpdate(
+      {
+        sessionId: verifiedToken?.userId,
+      },
+      {
+        image: file?.location,
+      }
+    );
 
-    // const updatedImage = await User.findOneAndUpdate(
-    //   {
-    //     sessionId: verifiedToken?.userId,
-    //   },
-    //   {
-    //     image: result.Location,
-    //   }
-    // );
-
-    // res.status(200).json({ message: "Data Updated successfully" });
-    res.status(200).send(req.file);
+    res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
-}; // Getting req.file as undefined
+};

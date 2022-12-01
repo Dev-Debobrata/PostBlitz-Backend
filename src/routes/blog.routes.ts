@@ -19,7 +19,7 @@ blogRouter.get("/blogs/category/:category", getBlogByCategory);
 
 blogRouter.post(
   "/blogs/create",
-  upload.fields([ { name: "images", maxCount: 3 } ]),
+  upload.fields([ { name: "image", maxCount: 3 } ]),
   postBlog
 );
 

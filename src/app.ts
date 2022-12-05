@@ -24,20 +24,46 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cookieParser());
 
-app.use(helmet.contentSecurityPolicy());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: false,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
 app.use(helmet.crossOriginEmbedderPolicy());
 app.use(helmet.crossOriginOpenerPolicy());
-app.use(helmet.crossOriginResourcePolicy());
-app.use(helmet.dnsPrefetchControl());
-app.use(helmet.expectCt());
-app.use(helmet.frameguard());
+app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
+app.use(
+  helmet.frameguard({
+    action: "deny",
+  })
+);
 app.use(helmet.hidePoweredBy());
-app.use(helmet.hsts());
+app.use(
+  helmet.hsts({
+    maxAge: 63072000,
+    preload: true,
+  })
+);
 app.use(helmet.ieNoOpen());
 app.use(helmet.noSniff());
 app.use(helmet.originAgentCluster());
-app.use(helmet.permittedCrossDomainPolicies());
-app.use(helmet.referrerPolicy());
+app.use(
+  helmet.permittedCrossDomainPolicies({
+    permittedPolicies: "none",
+  })
+);
+app.use(
+  helmet.referrerPolicy({
+    policy: "no-referrer",
+  })
+);
 app.use(helmet.xssFilter());
 
 app.use("/api", cors(corsConfigADMIN), adminRouter);

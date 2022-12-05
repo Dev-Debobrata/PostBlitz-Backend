@@ -30,7 +30,7 @@ export const patchUserLikes = async (
     if (likedUser === null) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(400).json({ message: "Like Added successfully" });
+    res.status(200).json({ message: "Like Added successfully" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -67,7 +67,7 @@ export const patchUserData = async (
     if (updateUser === null) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(400).json({ message: "Data Updated successfully" });
+    res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -109,7 +109,7 @@ export const patchUserPassword = async (
       }
     );
 
-    res.status(400).json({ message: "Data Updated successfully" });
+    res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

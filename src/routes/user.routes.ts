@@ -12,16 +12,18 @@ import {
   loginUser,
 } from "../controllers/users/postUsers.controllers";
 import { upload } from "../middleware/multerConfig";
+import { validation } from "../middleware/bodyValidation";
+import { userRegisterValidationSchema, userPasswordValidationSchema } from "../utils/bodyValidationSchema";
 
 export const userRouter = Router();
 
 userRouter.get("/users/username/:username", getUserByUsername);
 
-userRouter.post("/users/register", postUser);
+userRouter.post("/users/register", validation(userRegisterValidationSchema), postUser);
 userRouter.post("/users/login", loginUser);
 
 userRouter.patch("/users/update/details", patchUserData);
-userRouter.patch("/users/update/password", patchUserPassword);
+userRouter.patch("/users/update/password", validation(userPasswordValidationSchema),patchUserPassword);
 userRouter.patch("/users/update/like", patchUserLikes);
 userRouter.patch("/users/update/image", upload.single("image"), patchUserImage);
 

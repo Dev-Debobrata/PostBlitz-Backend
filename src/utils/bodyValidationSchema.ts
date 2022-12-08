@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { zfd } from "zod-form-data";
 
 export const userRegisterValidationSchema = z.object({
   body: z.object({
@@ -45,22 +44,4 @@ export const userPasswordValidationSchema = z.object({
           "Password must be at least 8 characters with one Uppercase, one lowercase, one special character and one number",
       }),
   }),
-});
-
-export const blogAdditionValidationSchema = zfd.formData({
-  title: zfd.text(
-    z
-      .string({ required_error: "Title is required" })
-      .max(100, { message: "Title is too long" })
-  ),
-  description: zfd.text(
-    z
-      .string({ required_error: "Description is required" })
-      .max(100, { message: "Description is too long" })
-  ),
-  content: zfd.text(
-    z
-      .string({ required_error: "Content is required" })
-      .max(100000, { message: "Content is too long" })
-  ),
 });

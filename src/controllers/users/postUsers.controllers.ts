@@ -62,8 +62,8 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
         .json({ message: "User Added Successfully" });
     });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
-    console.log(error.message);
   }
 };
 
@@ -109,6 +109,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
         message: "Logged In Successfully",
       });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

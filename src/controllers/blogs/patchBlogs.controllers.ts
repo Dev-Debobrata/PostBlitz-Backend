@@ -37,6 +37,7 @@ export const patchBlog = async (req: Request, res: Response): Promise<any> => {
 
     res.status(201).json({ message: "Blog Updated Successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

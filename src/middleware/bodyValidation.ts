@@ -12,6 +12,7 @@ export const validation =
       });
       return next();
     } catch (error: any) {
+      console.error(error);
       return res.status(400).json(error.issues.map((e: any) => e.message));
     }
   };

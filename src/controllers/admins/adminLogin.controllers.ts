@@ -15,7 +15,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<any> => {
     }
 
     const newSessionId = randomBytes(16).toString("hex");
-    
+
     const findAdmin: IAdmin | null = await Admin.findOneAndUpdate(
       { username: username },
       {
@@ -34,7 +34,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<any> => {
     }
 
     const refreshToken = refreshAdminToken(findAdmin);
-    
+
     res
       .cookie("sessionId", refreshToken, {
         httpOnly: true,
@@ -45,6 +45,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<any> => {
         message: "Logged In Successfully",
       });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

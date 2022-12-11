@@ -7,7 +7,7 @@
     "start": "tsc && node dist/index.js",
     "build": "tsc",
     "dev": "nodemon src/index.ts",
-    "lint": "eslint . --ext .ts"
+    "eslint:fix": "eslint --fix"
   },
   "repository": {
     "type": "git"
@@ -32,6 +32,11 @@
     "@types/node": "^18.11.3",
     "@types/nodemailer": "^6.4.6",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
@@ -43,6 +48,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
     "helmet": "^6.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0",
@@ -52,6 +58,7 @@
     "nodemailer": "^6.8.0",
     "redis": "^4.5.1",
     "uuid": "^9.0.0",
+    "winston": "^3.8.2",
     "zod": "^3.19.1"
   }
 }

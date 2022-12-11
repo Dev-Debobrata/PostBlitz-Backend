@@ -41,6 +41,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
     await User.deleteOne({ username: username });
     res.status(201).json({ message: "User Deleted Successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -13,12 +13,18 @@ import { blogRouter } from "./routes/blog.routes";
 import { connectToDatabase } from "./utils/dbConfig";
 import { adminRouter } from "./routes/admin.routes";
 import { corsConfigADMIN, corsConfigUSER } from "./middleware/corsConfig";
+import { logger } from "./utils/logger";
+import { redisClient } from "./utils/redisConfig";
 
 export const app: Application = express();
 
 connectToDatabase()
-  .then(() => console.log("Connected to database"))
-  .catch((err) => console.error(err));
+  .then(() => logger.info({ message: "Database Connected" }))
+  .catch((error) => logger.error({ message: error.message }));
+
+redisClient.connect()
+  .then(() => logger.info({ message: "Redis Connected" }))
+  .catch((error) => logger.error({ message: error.message }));
 
 app.use(urlencoded({ extended: true }));
 app.use(json());

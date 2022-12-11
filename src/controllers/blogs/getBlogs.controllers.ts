@@ -13,6 +13,7 @@ export const getBlogs = async (req: Request, res: Response): Promise<any> => {
     }
     res.status(200).json(blogs);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -32,6 +33,7 @@ export const getBlogById = async (
     }
     res.status(200).json(blog);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -50,6 +52,7 @@ export const getBlogByTitle = async (
     }
     res.status(200).json(blog);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -70,6 +73,7 @@ export const getBlogByCategory = async (
     }
     res.status(200).json(blog);
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

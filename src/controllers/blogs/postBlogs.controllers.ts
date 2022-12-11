@@ -6,7 +6,7 @@ import { User } from "../../models/user.model";
 import { IBlog, IUser } from "../../utils/typings";
 
 interface Files {
-  images: Express.MulterS3.File[];
+  image: Express.MulterS3.File[];
 }
 
 export const postBlog = async (req: Request, res: Response): Promise<any> => {
@@ -25,13 +25,12 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
-    const { title, description, content, categories, images } = req.body;
+    const { title, description, content, categories } = req.body;
 
     const files = <Files | undefined>req.files;
-
     const imagesArray: String[] = [];
 
-    files?.images.map((file) => {
+    files?.image.map((file) => {
       imagesArray.push(file?.location);
     });
 
@@ -48,6 +47,7 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
     await blog.save();
     res.status(201).json({ message: "Blog Added Successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

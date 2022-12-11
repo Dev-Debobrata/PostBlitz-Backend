@@ -32,6 +32,7 @@ export const patchUserLikes = async (
     }
     res.status(200).json({ message: "Like Added successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 }; // needs to be tested
@@ -49,6 +50,25 @@ export const patchUserData = async (
     const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
 
     const { name, username, country, email, pincode, address } = req.body;
+
+    if (
+      (name == "" &&
+        username == "" &&
+        country == "" &&
+        email == "" &&
+        pincode == "" &&
+        address == "") ||
+      (name == "" && !username && !country && !email && !pincode && !address) ||
+      (!name && username == "" && !country && !email && !pincode && !address) ||
+      (!name && !username && country == "" && !email && !pincode && !address) ||
+      (!name && !username && !country && email == "" && !pincode && !address) ||
+      (!name && !username && !country && !email && pincode == "" && !address) ||
+      (!name && !username && !country && !email && !pincode && address == "")
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Please enter the detail you want to add" });
+    }
 
     const updateUser: IUser | null = await User.findOneAndUpdate(
       {
@@ -69,6 +89,7 @@ export const patchUserData = async (
     }
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -111,6 +132,7 @@ export const patchUserPassword = async (
 
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -146,6 +168,7 @@ export const patchUserImage = async (
 
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

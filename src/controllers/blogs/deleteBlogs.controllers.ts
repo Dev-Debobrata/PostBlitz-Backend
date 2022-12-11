@@ -33,6 +33,7 @@ export const deleteBlog = async (req: Request, res: Response): Promise<any> => {
     await Blog.deleteOne({ _id: blogId });
     res.status(200).json({ message: "Blog Deleted Successfully" });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

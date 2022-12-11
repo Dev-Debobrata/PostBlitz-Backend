@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import { ServerApiVersion } from "mongodb";
 import { connect, ConnectOptions } from "mongoose";
+import { logger } from "./logger";
 
 dotenv.config({ path: __dirname + "/../.env" });
 
@@ -14,7 +15,12 @@ export const connectToDatabase = async () => {
       serverApi: ServerApiVersion.v1,
     });
   } catch (error: any) {
-    console.error(`Error: ${error.message}`);
+    logger.info({
+      message: `Mongo client: Unexpected error on idle client`,
+      extra: error,
+    });
+  
     process.exit(1);
   }
 };
+

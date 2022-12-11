@@ -7,6 +7,12 @@ dotenv.config({ path: __dirname + "/../.env" });
 
 const mongoURL: String | undefined = process.env.MONGO_URL;
 
+/**
+ * @description - Connects to Mongodb Cluster
+ * @constructor
+ * @returns {Promise<void>} - Promise
+ */
+
 export const connectToDatabase = async () => {
   try {
     await connect(`${mongoURL}`, <ConnectOptions>{

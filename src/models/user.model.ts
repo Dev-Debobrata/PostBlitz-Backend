@@ -1,6 +1,25 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "../utils/typings";
 
+/**
+ * @description - User Schema
+ * @constructor
+ * @param {string} sessionId - Session Id generated with token
+ * @param {string} name - Name of the user
+ * @param {string} username - Username of the user
+ * @param {string} password - Hashed Password of the user
+ * @param {string} image - Profile Picture of the user
+ * @param {string} email - Email of the user
+ * @param {string} address - Address of the user
+ * @param {string} pincode - Pincode of the user
+ * @param {string} country - Country of the user
+ * @param {number} blogs - Number of blogs the user wrote
+ * @param {number} likedBlogs - Number of blogs the user liked
+ * @param {number} created_At - Created At Timestamp
+ * @param {number} updated_At - Updated At Timestamp
+ * @returns {string} User Schema
+ */
+
 const userSchema = new Schema<IUser>({
   sessionId: {
     type: String,

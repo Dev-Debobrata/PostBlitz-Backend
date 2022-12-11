@@ -7,9 +7,14 @@ import { IUser } from "../../utils/typings";
 import { IsValidUser, passHash } from "../../middleware/passHashing";
 import { generateUserToken, RefreshUserToken } from "../../middleware/token";
 import { transporter } from "../../middleware/nodemailerConfig";
+import { serverError } from "../../utils/errorHandler";
 dotenv.config({ path: __dirname + "/../../.env" });
 
 const { AUTH_EMAIL } = process.env;
+
+/**
+ * @description This service is used to add user. It will take the data and add the user to the database.
+ */
 
 export const postUser = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -62,10 +67,13 @@ export const postUser = async (req: Request, res: Response): Promise<any> => {
         .json({ message: "User Added Successfully" });
     });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };
+
+/**
+ * @description This service is used to login user. It will check if the user exists or not. If the user exists then it will check if the password is correct or not. If the password is correct then it will generate a new token and send it to the user.
+ */
 
 export const loginUser = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -109,7 +117,6 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
         message: "Logged In Successfully",
       });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };

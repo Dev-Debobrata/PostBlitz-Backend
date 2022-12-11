@@ -14,10 +14,15 @@ import {
 import { upload } from "../middleware/multerConfig";
 import { validation } from "../middleware/bodyValidation";
 import { userRegisterValidationSchema, userPasswordValidationSchema } from "../utils/bodyValidationSchema";
+import { userCache } from "../middleware/caching";
+
+/**
+ * @description - User route
+ */
 
 export const userRouter = Router();
 
-userRouter.get("/users/username/:username", getUserByUsername);
+userRouter.get("/users/username/:username", userCache, getUserByUsername);
 
 userRouter.post("/users/register", validation(userRegisterValidationSchema), postUser);
 userRouter.post("/users/login", loginUser);

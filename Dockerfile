@@ -1,4 +1,4 @@
-FROM Node:hydrogen-alpin3.15
+FROM node:18.12.1-alpine3.15
 
 WORKDIR /src/app
 

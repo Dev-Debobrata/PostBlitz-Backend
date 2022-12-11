@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import { verifyUserToken } from "../../middleware/token";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
+import { redisClient } from "../../utils/redisConfig";
+import { serverError } from "../../utils/errorHandler";
+
+/**
+ * @description This service is used to get a user by ID. It will check if the user is logged in or not. If the user is logged in then it will get the user by ID.
+ */
 
 export const getUserByID = async (
   req: Request,
@@ -26,9 +32,13 @@ export const getUserByID = async (
     }
     res.status(200).json(getUser);
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };
+
+/**
+ * @description This service is used to get a user by username. It will check if the user is logged in or not. If the user is logged in then it will get the user by username.
+ */
 
 export const getUserByUsername = async (
   req: Request,
@@ -45,9 +55,11 @@ export const getUserByUsername = async (
       return res.status(404).json({ message: "User not found" });
     }
 
+    await redisClient.setEx(username, 3600, JSON.stringify(user));
+
     res.status(200).json(user);
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
+
 };

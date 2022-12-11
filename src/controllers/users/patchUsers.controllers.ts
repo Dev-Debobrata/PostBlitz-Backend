@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { IsValidUser } from "../../middleware/passHashing";
 import { verifyUserToken } from "../../middleware/token";
 import { User } from "../../models/user.model";
+import { serverError } from "../../utils/errorHandler";
 import { IUser } from "../../utils/typings";
+
+/**
+ * @description This service is used to update likes given by user. It will check if the user is logged in or not. If the user is logged in then it will take the blog id and update the likes given by the user.
+ */
 
 export const patchUserLikes = async (
   req: Request,
@@ -32,10 +37,13 @@ export const patchUserLikes = async (
     }
     res.status(200).json({ message: "Like Added successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 }; // needs to be tested
+
+/**
+ * @description This service is used to update user data. It will check if the user is logged in or not. If the user is logged in then it will take the data and update the user data.
+ */
 
 export const patchUserData = async (
   req: Request,
@@ -89,10 +97,13 @@ export const patchUserData = async (
     }
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };
+
+/**
+ * @description This service is used to update user password. It will check if the user is logged in or not. If the user is logged in then it will take the password and update the user password.  
+ */
 
 export const patchUserPassword = async (
   req: Request,
@@ -132,10 +143,13 @@ export const patchUserPassword = async (
 
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };
+
+/**
+ * @description This service is used to update user image. It will check if the user is logged in or not. If the user is logged in then it will take the image and update the user image.
+ */
 
 export const patchUserImage = async (
   req: Request,
@@ -168,7 +182,6 @@ export const patchUserImage = async (
 
     res.status(200).json({ message: "Data Updated successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };

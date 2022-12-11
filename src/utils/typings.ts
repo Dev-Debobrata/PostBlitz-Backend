@@ -1,3 +1,10 @@
+/**
+ * @Description: This file contains all the types used in the project
+ * @params {IUser} - This interface is used to define the type of user
+ * @params {IBlog} - This interface is used to define the type of blog
+ * @params {IAdmin} - This interface is used to define the type of admin
+ */
+
 export type IUser = {
   _id: String;
   sessionId: String;

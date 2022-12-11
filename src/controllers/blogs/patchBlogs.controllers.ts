@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { verifyUserToken } from "../../middleware/token";
 import { Blog } from "../../models/blog.model";
 import { User } from "../../models/user.model";
+import { serverError } from "../../utils/errorHandler";
 import { IBlog, IUser } from "../../utils/typings";
+
+/**
+ * @description This service is used to update a blog. It will check if the user is logged in or not. If the user is logged in then it will check if the user is the author of the blog or not. If the user is the author of the blog then it will update the blog.
+ */
 
 export const patchBlog = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -37,7 +42,6 @@ export const patchBlog = async (req: Request, res: Response): Promise<any> => {
 
     res.status(201).json({ message: "Blog Updated Successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };

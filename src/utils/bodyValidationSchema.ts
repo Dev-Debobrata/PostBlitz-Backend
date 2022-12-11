@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+/**
+ * @description - User register validation schema
+ * @param {string} name - User's name
+ * @param {string} username - User's username
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @param {string} address - User's address
+ * @param {string} pincode - User's pincode
+ * @param {string} country - User's country
+ * @returns {string} User register validation schema
+ */
+
 export const userRegisterValidationSchema = z.object({
   body: z.object({
     name: z.string({

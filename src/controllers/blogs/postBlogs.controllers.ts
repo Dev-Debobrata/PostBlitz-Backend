@@ -3,11 +3,16 @@ import { HydratedDocument } from "mongoose";
 import { verifyUserToken } from "../../middleware/token";
 import { Blog } from "../../models/blog.model";
 import { User } from "../../models/user.model";
+import { serverError } from "../../utils/errorHandler";
 import { IBlog, IUser } from "../../utils/typings";
 
 interface Files {
   image: Express.MulterS3.File[];
 }
+
+/**
+ * @description This service is used to post a blog. It will check if the user is logged in or not. If the user is logged in then it will post the blog.
+ */
 
 export const postBlog = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -47,7 +52,6 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
     await blog.save();
     res.status(201).json({ message: "Blog Added Successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };

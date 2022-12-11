@@ -4,6 +4,10 @@ import { logger } from './logger';
 
 dotenv.config({ path: __dirname + "/../.env" });
 
+/**
+ * @description - Connects to Redis Cluster
+ */
+
 export const redisClient = createClient({
   url: `${process.env.REDIS_URL}`,
 }); 

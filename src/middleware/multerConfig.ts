@@ -1,10 +1,10 @@
-import { Request } from "express";
-import multer from "multer";
-import * as dotenv from "dotenv";
-import multerS3 from "multer-s3";
-import { v4 } from "uuid";
-import { s3 } from "../utils/s3Config";
-dotenv.config({ path: __dirname + "/../.env" });
+import { Request } from 'express';
+import multer from 'multer';
+import * as dotenv from 'dotenv';
+import multerS3 from 'multer-s3';
+import { v4 } from 'uuid';
+import { s3 } from '../utils/s3Config';
+dotenv.config({ path: __dirname + '/../.env' });
 
 const dpStorage = multerS3({
   s3: s3,
@@ -18,16 +18,25 @@ const dpStorage = multerS3({
 });
 
 const fileFilter = (req: Request, file: Express.MulterS3.File, cb: any) => {
-  if (
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/png"
-  ) {
+  if (file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
-    cb(new Error("Image uploaded is not of type jpg/jpeg or png"), false);
+    cb(new Error('Image uploaded is not of type jpg/jpeg or png'), false);
   }
 };
+
+/**
+ * @description Multer configuration to upload files to AWS S3
+ * @constructor
+ * @param {multerS3} s3 - AWS S3 config
+ * @param {multerS3} bucket - AWS S3 Bucket
+ * @param {multerS3} metadata - AWS S3 Metadata
+ * @param {multerS3} key - AWS S3 Key
+ * @param {multer} fileFilter - File filter
+ * @param {multer} limits - File size limit
+ * @returns {multer} Multer config
+ * @returns {multerS3} Multer S3 config
+ */
 
 export var upload = multer({
   storage: dpStorage,

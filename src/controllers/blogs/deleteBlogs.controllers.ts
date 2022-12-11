@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { verifyUserToken } from "../../middleware/token";
 import { Blog } from "../../models/blog.model";
 import { User } from "../../models/user.model";
+import { serverError } from "../../utils/errorHandler";
 import { IBlog, IUser } from "../../utils/typings";
+
+/**
+ * @description This service is used to delete a blog. It will check if the user is logged in or not. If the user is logged in then it will check if the user is the author of the blog or not. If the user is the author of the blog then it will delete the blog.
+ */
 
 export const deleteBlog = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -33,7 +38,6 @@ export const deleteBlog = async (req: Request, res: Response): Promise<any> => {
     await Blog.deleteOne({ _id: blogId });
     res.status(200).json({ message: "Blog Deleted Successfully" });
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    serverError(error, res);
   }
 };

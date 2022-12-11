@@ -8,11 +8,16 @@ import {
 } from "../controllers/blogs/getBlogs.controllers";
 import { patchBlog } from "../controllers/blogs/patchBlogs.controllers";
 import { postBlog } from "../controllers/blogs/postBlogs.controllers";
+import { blogCache } from "../middleware/caching";
 import { upload } from "../middleware/multerConfig";
+
+/**
+ * @description - Blog route
+ */
 
 export const blogRouter = Router();
 
-blogRouter.get("/blogs", getBlogs);
+blogRouter.get("/blogs", blogCache, getBlogs);
 blogRouter.get("/blogs/id/:_id", getBlogById);
 blogRouter.get("/blogs/title/:title", getBlogByTitle);
 blogRouter.get("/blogs/category/:category", getBlogByCategory);

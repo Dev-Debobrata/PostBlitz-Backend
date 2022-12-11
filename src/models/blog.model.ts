@@ -1,6 +1,21 @@
 import { Schema, model } from "mongoose";
 import { IBlog } from "../utils/typings";
 
+/**
+ * @description - Blog Schema
+ * @constructor
+ * @param {string} author - Author of the blog
+ * @param {string} title - Title of the blog
+ * @param {string} description - Description of the blog
+ * @param {string} content - Content of the blog
+ * @param {string} categories - Categories of the blog
+ * @param {string} images - Images of the blog
+ * @param {number} likes - Number of Likes the blog has
+ * @param {number} created_At - Created At Timestamp
+ * @param {number} updated_At - Updated At Timestamp
+ * @returns {string} Blog Schema
+ */
+
 const blogSchema = new Schema<IBlog>({
   author: {
     type: Schema.Types.ObjectId,

@@ -2,6 +2,16 @@ import { CorsOptions } from "cors";
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname + "/../.env" });
 
+/**
+ * @description Cors config for user
+ * @constructor
+ * @param {CorsOptions} allowedHeaders - Allowed headers
+ * @param {CorsOptions} origin - Origin
+ * @param {CorsOptions} methods - Methods
+ * @param {CorsOptions} credentials - Credentials
+ * @returns {CorsOptions} Cors config
+ */
+
 export const corsConfigUSER: CorsOptions = {
   allowedHeaders: [
     "Origin",
@@ -14,6 +24,16 @@ export const corsConfigUSER: CorsOptions = {
   methods: "GET,PATCH,POST,DELETE",
   credentials: true,
 };
+
+/**
+ * @description Cors config for admin
+ * @constructor
+ * @param {CorsOptions} allowedHeaders - Allowed HTTP headers
+ * @param {CorsOptions} origin - Origin
+ * @param {CorsOptions} methods - Methods
+ * @param {CorsOptions} credentials - Credentials
+ * @returns {CorsOptions} Cors config
+ */
 
 export const corsConfigADMIN: CorsOptions = {
   allowedHeaders: [

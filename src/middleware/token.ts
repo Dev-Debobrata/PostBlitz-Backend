@@ -8,6 +8,10 @@ const USER_ACCESS_TOKEN_SECRET: Secret = `${process.env.USER_ACCESS_TOKEN_SECRET
 const ADMIN_ACCESS_TOKEN_SECRET: Secret = `${process.env.ADMIN_ACCESS_TOKEN_SECRET}`;
 const USER_REFRESH_TOKEN_SECRET: Secret = `${process.env.USER_REFRESH_TOKEN_SECRET}`;
 
+/**
+ * @description - Generates user token
+ */
+
 export const generateUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
       userId: user.sessionId,
@@ -19,6 +23,10 @@ export const generateUserToken = async (user: IUser) => {
 
   return token;
 };
+
+/**
+ * @description - Generates refresh token
+ */
 
 export const RefreshUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
@@ -32,6 +40,10 @@ export const RefreshUserToken = async (user: IUser) => {
   return token;
 };
 
+/**
+ * @description - Verifies user token
+ */
+
 export const verifyUserToken = async (token: any) => {
   const verified = await verify(
     token,
@@ -41,6 +53,9 @@ export const verifyUserToken = async (token: any) => {
   return verified;
 };
 
+/**
+ * @description - Refreshes admin token
+ */
 
 export const refreshAdminToken = async (admin: IAdmin) => {
   const payload: JwtPayload = {
@@ -53,6 +68,10 @@ export const refreshAdminToken = async (admin: IAdmin) => {
 
   return token;
 };
+
+/**
+ * @description - Verifies admin token
+ */
 
 export const verifyAdminToken = async (token: any) => {
   const verified = await verify(

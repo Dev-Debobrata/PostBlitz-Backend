@@ -1,6 +1,13 @@
 version: '3.7'
 
 services:
+  web:
+    build: .
+    ports: 
+     - "9000:9000"
+    networks:
+      - backend
+      
   redis:
     image: 'bitnami/redis:latest'
     environment:
@@ -10,7 +17,5 @@ services:
     ports:
       - '6379:6379'
 
-volumes:
-  db_data: {}
 networks:
   backend:

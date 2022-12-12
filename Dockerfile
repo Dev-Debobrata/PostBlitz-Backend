@@ -1,16 +1,11 @@
-FROM node:18.12.1-alpine3.15
+FROM node:18.12.1-alpine3.15 as development
 
-WORKDIR /src/app
+WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY yarn.lock ./
-
+COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY . .
 
-ENV PORT=9000
-
 EXPOSE 9000
-
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]

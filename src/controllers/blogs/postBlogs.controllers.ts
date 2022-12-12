@@ -34,7 +34,6 @@ export const postBlog = async (req: Request, res: Response): Promise<any> => {
 
     const files = <Files | undefined>req.files;
     const imagesArray: String[] = [];
-
     files?.image.map((file) => {
       imagesArray.push(file?.location);
     });

@@ -1,6 +1,4 @@
 import { CorsOptions } from "cors";
-import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname + "/../.env" });
 
 /**
  * @description Cors config for user

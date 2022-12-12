@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
-import * as dotenv from "dotenv";
 import { randomBytes } from "crypto";
 import { User } from "../../models/user.model";
 import { IUser } from "../../utils/typings";
@@ -8,7 +7,6 @@ import { IsValidUser, passHash } from "../../middleware/passHashing";
 import { generateUserToken, RefreshUserToken } from "../../middleware/token";
 import { transporter } from "../../middleware/nodemailerConfig";
 import { serverError } from "../../utils/errorHandler";
-dotenv.config({ path: __dirname + "/../../.env" });
 
 const { AUTH_EMAIL } = process.env;
 

@@ -1,7 +1,4 @@
 import winston from 'winston';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 /**
  * @description - Logger

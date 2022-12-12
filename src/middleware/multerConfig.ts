@@ -1,10 +1,8 @@
 import { Request } from 'express';
 import multer from 'multer';
-import * as dotenv from 'dotenv';
 import multerS3 from 'multer-s3';
 import { v4 } from 'uuid';
 import { s3 } from '../utils/s3Config';
-dotenv.config({ path: __dirname + '/../.env' });
 
 const dpStorage = multerS3({
   s3: s3,

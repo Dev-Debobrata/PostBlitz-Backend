@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { serverError } from '../utils/errorHandler';
 import { redisClient } from '../utils/redisConfig';
 

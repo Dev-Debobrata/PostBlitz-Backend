@@ -1,6 +1,4 @@
 import S3 from 'aws-sdk/clients/s3';
-import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname + "/../.env" });
 
 const region = process.env.AWS_S3_BUCKET_REGION;
 const accessKeyId = process.env.AWS_S3_BUCKET_ACCESS_KEY_ID;

@@ -1,6 +1,4 @@
 import { createTransport } from "nodemailer";
-import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname + "/../.env" })
 
 const { AUTH_EMAIL, AUTH_PASS } = process.env;
 

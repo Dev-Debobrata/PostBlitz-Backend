@@ -1,6 +1,6 @@
-# PostBlitz-Backend
+# PostBlitz
 
-Backend for the blogging site project PostBlitz
+A full-stack blogging site project.
 
 <br />
 
@@ -21,6 +21,12 @@ Backend for the blogging site project PostBlitz
 3. Run `docker-compose up` to start the server.
 
 <br />
+
+# 1. Frontend
+
+<br/>
+
+# 2. Backend
 
 ## Dependencies
 

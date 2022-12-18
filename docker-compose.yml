@@ -1,26 +1,44 @@
 version: '3.7'
 
 services:
-  redis:
-    image: 'bitnami/redis:latest'
+  cache:
+    container_name: redis
+    image: 'redis:latest'
+    restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/redis
+    ports:
+      - "6379:6379"
     networks:
       - backend
-    ports:
-      - '6379:6379'
 
-  # server:
-  #   build:
-  #     context: .
-  #     target: development
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - 9000:9000
-  #   networks:
-  #     - backend
+  server:
+    build:
+      context: ./server
+    container_name: postblitz-server
+    restart: always
+    volumes:
+      - server_data:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - cache
+    links:
+      - cache
+    environment:
+      REDIS_URL: redis://cache:6379
+    ports:
+      - "9000:9000"
+      - "9229:9229" # for debugging
+    networks:
+      - backend
 
 networks:
   backend:
+volumes:
+  redis_data:
+  server_data:
+  node_modules:
+
+

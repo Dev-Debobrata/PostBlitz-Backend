@@ -1,2 +1,11 @@
+client/node_modules
+client/.next/
+client/out/
+client/build/
+client/.env*.local
+client/.vercel
+client/next-env.d.ts
+
+
 server/node_modules
 server/dist

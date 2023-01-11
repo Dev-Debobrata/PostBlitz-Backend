@@ -15,10 +15,10 @@ A full-stack blogging site project.
 2. Change the working directory
 
 ```bash
-  cd PostBlitz-Backend
+  cd PostBlitz
 ```
 
-3. Run `docker-compose up` to start the server.
+3. Run `docker-compose up` to start the project.
 
 <br />
 

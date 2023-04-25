@@ -1,4 +1,4 @@
-import { CorsOptions } from "cors";
+import { CorsOptions } from 'cors';
 
 /**
  * @description Cors config for user
@@ -12,15 +12,15 @@ import { CorsOptions } from "cors";
 
 export const corsConfigUSER: CorsOptions = {
   allowedHeaders: [
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "X-Access-Token",
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'X-Access-Token'
   ],
   origin: `${process.env.USER_URL}`,
-  methods: "GET,PATCH,POST,DELETE",
-  credentials: true,
+  methods: 'GET,PATCH,POST,DELETE',
+  credentials: true
 };
 
 /**
@@ -35,13 +35,13 @@ export const corsConfigUSER: CorsOptions = {
 
 export const corsConfigADMIN: CorsOptions = {
   allowedHeaders: [
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "X-Access-Token",
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'X-Access-Token'
   ],
   origin: `${process.env.ADMIN_URL}`,
-  methods: "GET,PATCH,POST,DELETE",
-  credentials: true,
+  methods: 'GET,PATCH,POST,DELETE',
+  credentials: true
 };

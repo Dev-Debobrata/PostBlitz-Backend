@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 import { logger } from './logger';
 dotenv.config({ path: __dirname + '/../../.env' });
 
-const mongoURL: String | undefined = process.env.MONGO_URL;
+const mongoURL: string | undefined = process.env.MONGO_URL;
 
 /**
  * @description - Connects to Mongodb Cluster
@@ -18,10 +18,13 @@ export const connectToDatabase = async () => {
     await mongoose.connect(`${mongoURL}`, <mongoose.ConnectOptions>{
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverApi: ServerApiVersion.v1,
+      serverApi: ServerApiVersion.v1
     });
-  } catch (error: any) {
-    logger.error({ message: `Mongo client: Unexpected error on idle client`, extra: error });
+  } catch (error: unknown) {
+    logger.error({
+      message: `Mongo client: Unexpected error on idle client`,
+      extra: error
+    });
     process.exit(1);
   }
 };

@@ -12,7 +12,11 @@ import { redisClient } from '../utils/redisConfig';
  * @returns {Promise<any>} - Returns the user data from redis or calls the next middleware.
  */
 
-export const userCache = async (req: Request, res: Response, next: NextFunction) => {
+export const userCache = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const username = req.params.username;
 
   redisClient
@@ -24,7 +28,7 @@ export const userCache = async (req: Request, res: Response, next: NextFunction)
         next();
       }
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       serverError(error, res);
     });
 };
@@ -39,7 +43,11 @@ export const userCache = async (req: Request, res: Response, next: NextFunction)
  * @returns {Promise<any>} - Returns the user data from redis or calls the next middleware.
  */
 
-export const blogCache = async (req: Request, res: Response, next: NextFunction) => {
+export const blogCache = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   redisClient
     .get('blogs')
     .then((data) => {
@@ -49,7 +57,7 @@ export const blogCache = async (req: Request, res: Response, next: NextFunction)
         next();
       }
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       serverError(error, res);
     });
 };

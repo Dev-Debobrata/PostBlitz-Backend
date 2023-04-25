@@ -1,55 +1,68 @@
-import { Request, Response } from "express";
-import { IAdmin } from "../../utils/typings";
-import { IsValidUser } from "../../middleware/passHashing";
-import { refreshAdminToken } from "../../middleware/token";
-import { Admin } from "../../models/admin.model";
-import { randomBytes } from "crypto";
-import { serverError } from "../../utils/errorHandler";
+import { Request, Response } from 'express';
+import { IAdmin } from '../../utils/typings';
+import { IsValidUser } from '../../middleware/passHashing';
+import { refreshAdminToken } from '../../middleware/token';
+import { Admin } from '../../models/admin.model';
+import { randomBytes } from 'crypto';
+import { serverError } from '../../utils/errorHandler';
+import { logger } from '../../utils/logger';
 
 /**
  * @description This service is used to login admin. It will check if the user exists or not. If the user exists then it will check if the password is correct or not. If the password is correct then it will generate a new token and send it to the user.
  */
 
-export const loginAdmin = async (req: Request, res: Response): Promise<any> => {
+export const loginAdmin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { username, password } = req.body;
     const sessionId = req.cookies.sessionId;
 
     if (sessionId) {
-      return res.status(302).json({ message: "Token Already Exist" });
+      logger.info({ status: 200, message: 'OK' });
+      res.status(200).json({ message: 'Token Already Exist' });
+      return;
     }
 
-    const newSessionId = randomBytes(16).toString("hex");
+    const newSessionId = randomBytes(16).toString('hex');
 
     const findAdmin: IAdmin | null = await Admin.findOneAndUpdate(
       { username: username },
       {
         sessionId: newSessionId,
-        updated_At: Date.now(),
+        updated_At: Date.now()
       }
     );
     if (findAdmin === null) {
-      return res.status(404).json({ message: "user does not exist" });
+      logger.warn({ status: 404, message: 'Not Found' });
+      res.status(404).json({ message: 'user does not exist' });
+      return;
     }
-    const userPassword = findAdmin.password.toString();
+    const userPassword = findAdmin?.password.toString();
 
-    const result = await IsValidUser(password, userPassword);
+    const result = await IsValidUser(password, userPassword || '');
     if (result === false) {
-      return res.status(401).json({ message: "Invalid Credentials" });
+      logger.warn({ status: 401, message: 'Unauthorized' });
+      res.status(401).json({ message: 'Invalid Credentials' });
+      return;
+    }
+    let refreshToken;
+    if (findAdmin) {
+      refreshToken = refreshAdminToken(findAdmin);
     }
 
-    const refreshToken = refreshAdminToken(findAdmin);
-
+    logger.info({ status: 200, message: 'OK' });
     res
-      .cookie("sessionId", refreshToken, {
+      .cookie('sessionId', refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 30,
+        maxAge: 1000 * 60 * 60 * 24 * 30
       })
-      .status(201)
+      .status(200)
       .json({
-        message: "Logged In Successfully",
+        message: 'Logged In Successfully'
       });
-  } catch (error: any) {
-    serverError(error, res);
+  } catch (error: unknown) {
+    serverError(error as Error, res);
   }
 };

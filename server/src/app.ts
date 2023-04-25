@@ -3,27 +3,28 @@ import express, {
   Request,
   Response,
   json,
-  urlencoded,
-} from "express";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import * as helmet from "helmet";
-import { userRouter } from "./routes/user.routes";
-import { blogRouter } from "./routes/blog.routes";
-import { connectToDatabase } from "./utils/dbConfig";
-import { adminRouter } from "./routes/admin.routes";
-import { corsConfigADMIN, corsConfigUSER } from "./middleware/corsConfig";
-import { logger } from "./utils/logger";
-import { redisClient } from "./utils/redisConfig";
+  urlencoded
+} from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import * as helmet from 'helmet';
+import { userRouter } from './routes/user.routes';
+import { blogRouter } from './routes/blog.routes';
+import { connectToDatabase } from './utils/dbConfig';
+import { adminRouter } from './routes/admin.routes';
+import { corsConfigADMIN, corsConfigUSER } from './middleware/corsConfig';
+import { logger } from './utils/logger';
+import { redisClient } from './utils/redisConfig';
 
 export const app: Application = express();
 
 connectToDatabase()
-  .then(() => logger.info({ message: "Database Connected" }))
+  .then(() => logger.info({ message: 'Database Connected' }))
   .catch((error) => logger.error({ message: error.message }));
 
-redisClient.connect()
-  .then(() => logger.info({ message: "Redis Connected" }))
+redisClient
+  .connect()
+  .then(() => logger.info({ message: 'Redis Connected' }))
   .catch((error) => logger.error({ message: error.message }));
 
 app.use(urlencoded({ extended: true }));
@@ -38,23 +39,23 @@ app.use(
       scriptSrc: ["'self'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
-      upgradeInsecureRequests: [],
-    },
+      upgradeInsecureRequests: []
+    }
   })
 );
 app.use(helmet.crossOriginEmbedderPolicy());
 app.use(helmet.crossOriginOpenerPolicy());
-app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
+app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' }));
 app.use(
   helmet.frameguard({
-    action: "deny",
+    action: 'deny'
   })
 );
 app.use(helmet.hidePoweredBy());
 app.use(
   helmet.hsts({
     maxAge: 63072000,
-    preload: true,
+    preload: true
   })
 );
 app.use(helmet.ieNoOpen());
@@ -62,20 +63,20 @@ app.use(helmet.noSniff());
 app.use(helmet.originAgentCluster());
 app.use(
   helmet.permittedCrossDomainPolicies({
-    permittedPolicies: "none",
+    permittedPolicies: 'none'
   })
 );
 app.use(
   helmet.referrerPolicy({
-    policy: "no-referrer",
+    policy: 'no-referrer'
   })
 );
 app.use(helmet.xssFilter());
 
-app.use("/api", cors(corsConfigADMIN), adminRouter);
-app.use("/api", cors(corsConfigUSER), userRouter);
-app.use("/api", blogRouter);
+app.use('/api', cors(corsConfigADMIN), adminRouter);
+app.use('/api', cors(corsConfigUSER), userRouter);
+app.use('/api', blogRouter);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world!");
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello world!');
 });

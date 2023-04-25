@@ -1,10 +1,14 @@
-import * as dotenv from "dotenv";
-import jwt, { JwtPayload, verify } from "jsonwebtoken";
-import { IAdmin, IUser } from "../utils/typings";
+import * as dotenv from 'dotenv';
+import jwt, { JwtPayload, verify } from 'jsonwebtoken';
+import { IAdmin, IUser, ITokenPayload } from '../utils/typings';
 
-dotenv.config({ path: __dirname + "/../.env" });
+dotenv.config({ path: __dirname + '/../.env' });
 
-const { USER_ACCESS_TOKEN_SECRET, ADMIN_ACCESS_TOKEN_SECRET, USER_REFRESH_TOKEN_SECRET } = process.env;
+const {
+  USER_ACCESS_TOKEN_SECRET,
+  ADMIN_ACCESS_TOKEN_SECRET,
+  USER_REFRESH_TOKEN_SECRET
+} = process.env;
 
 /**
  * @description - Generates user token
@@ -12,10 +16,10 @@ const { USER_ACCESS_TOKEN_SECRET, ADMIN_ACCESS_TOKEN_SECRET, USER_REFRESH_TOKEN_
 
 export const generateUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
-      userId: user.sessionId,
+      userId: user.sessionId
     },
     options = {
-      expiresIn: "30d",
+      expiresIn: '30d'
     };
   const token = await jwt.sign(payload, `${USER_ACCESS_TOKEN_SECRET}`, options);
 
@@ -28,12 +32,16 @@ export const generateUserToken = async (user: IUser) => {
 
 export const RefreshUserToken = async (user: IUser) => {
   const payload: JwtPayload = {
-      userId: user.sessionId,
+      userId: user.sessionId
     },
     options = {
-      expiresIn: "30d",
+      expiresIn: '30d'
     };
-  const token = await jwt.sign(payload, `${USER_REFRESH_TOKEN_SECRET}`, options);
+  const token = await jwt.sign(
+    payload,
+    `${USER_REFRESH_TOKEN_SECRET}`,
+    options
+  );
 
   return token;
 };
@@ -42,13 +50,15 @@ export const RefreshUserToken = async (user: IUser) => {
  * @description - Verifies user token
  */
 
-export const verifyUserToken = async (token: any) => {
+export const verifyUserToken = async (
+  token: string
+): Promise<ITokenPayload> => {
   const verified = await verify(
     token,
     `${USER_ACCESS_TOKEN_SECRET}` || `${USER_REFRESH_TOKEN_SECRET}`
   );
 
-  return verified;
+  return verified as ITokenPayload;
 };
 
 /**
@@ -57,12 +67,16 @@ export const verifyUserToken = async (token: any) => {
 
 export const refreshAdminToken = async (admin: IAdmin) => {
   const payload: JwtPayload = {
-      adminId: admin.sessionId,
+      adminId: admin.sessionId
     },
     options = {
-      expiresIn: "6h",
+      expiresIn: '6h'
     };
-  const token = await jwt.sign(payload, `${ADMIN_ACCESS_TOKEN_SECRET}`, options);
+  const token = await jwt.sign(
+    payload,
+    `${ADMIN_ACCESS_TOKEN_SECRET}`,
+    options
+  );
 
   return token;
 };
@@ -71,11 +85,8 @@ export const refreshAdminToken = async (admin: IAdmin) => {
  * @description - Verifies admin token
  */
 
-export const verifyAdminToken = async (token: any) => {
-  const verified = await verify(
-    token,
-    `${ADMIN_ACCESS_TOKEN_SECRET}`
-  );
+export const verifyAdminToken = async (token: string) => {
+  const verified = await verify(token, `${ADMIN_ACCESS_TOKEN_SECRET}`);
 
   return verified;
 };

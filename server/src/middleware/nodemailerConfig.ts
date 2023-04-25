@@ -1,4 +1,4 @@
-import { createTransport } from "nodemailer";
+import { createTransport } from 'nodemailer';
 
 const { AUTH_EMAIL, AUTH_PASS } = process.env;
 
@@ -13,11 +13,11 @@ const { AUTH_EMAIL, AUTH_PASS } = process.env;
  */
 
 export const transporter = createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
+  service: 'gmail',
+  host: 'smtp.gmail.com',
   port: 587,
   auth: {
     user: `${AUTH_EMAIL}`,
-    pass: `${AUTH_PASS}`,
-  },
+    pass: `${AUTH_PASS}`
+  }
 });

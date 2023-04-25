@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import multer from 'multer';
+import multer, { FileFilterCallback } from 'multer';
 import multerS3 from 'multer-s3';
 import { v4 } from 'uuid';
 import { s3 } from '../utils/s3Config';
@@ -12,14 +12,22 @@ const dpStorage = multerS3({
   },
   key: function (req: Request, file: Express.MulterS3.File, cb) {
     cb(null, `${v4()}-${Date.now().toString()}`);
-  },
+  }
 });
 
-const fileFilter = (req: Request, file: Express.MulterS3.File, cb: any) => {
-  if (file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+const fileFilter = (
+  req: Request,
+  file: Express.MulterS3.File,
+  cb: FileFilterCallback
+) => {
+  if (
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png'
+  ) {
     cb(null, true);
   } else {
-    cb(new Error('Image uploaded is not of type jpg/jpeg or png'), false);
+    cb(new Error('Image uploaded is not of type jpg/jpeg or png'));
   }
 };
 
@@ -36,8 +44,8 @@ const fileFilter = (req: Request, file: Express.MulterS3.File, cb: any) => {
  * @returns {multerS3} Multer S3 config
  */
 
-export var upload = multer({
+export const upload = multer({
   storage: dpStorage,
   fileFilter: fileFilter,
-  limits: { fileSize: 2000000, files: 3 },
+  limits: { fileSize: 2000000, files: 3 }
 });

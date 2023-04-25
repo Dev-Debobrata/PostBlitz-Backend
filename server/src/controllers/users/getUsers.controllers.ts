@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
-import { verifyUserToken } from "../../middleware/token";
-import { User } from "../../models/user.model";
-import { IUser } from "../../utils/typings";
-import { redisClient } from "../../utils/redisConfig";
-import { serverError } from "../../utils/errorHandler";
+import { Request, Response } from 'express';
+import { verifyUserToken } from '../../middleware/token';
+import { User } from '../../models/user.model';
+import { ITokenPayload, IUser } from '../../utils/typings';
+import { redisClient } from '../../utils/redisConfig';
+import { serverError } from '../../utils/errorHandler';
+import { logger } from '../../utils/logger';
 
 /**
  * @description This service is used to get a user by ID. It will check if the user is logged in or not. If the user is logged in then it will get the user by ID.
@@ -12,27 +13,34 @@ import { serverError } from "../../utils/errorHandler";
 export const getUserByID = async (
   req: Request,
   res: Response
-): Promise<any> => {
+): Promise<void> => {
   try {
     const sessionToken = req.cookies.sessionId;
     if (!sessionToken) {
-      return res.status(302).json({ message: "Please Log In" });
+      logger.warn({ status: 403, message: 'Forbidden' });
+      res.status(403).json({ message: 'Please Log In' });
+      return;
     }
 
-    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+    const verifiedToken: ITokenPayload | undefined = await verifyUserToken(
+      sessionToken
+    );
 
     const getUser: IUser | null = await User.findOne(
       {
-        sessionId: verifiedToken?.userId,
+        sessionId: verifiedToken?.userId
       },
-      "name username country email pincode address"
-    ).populate("blogs", "-author");
+      'name username country email pincode address'
+    ).populate('blogs', '-author');
     if (getUser === null) {
-      return res.status(404).json({ message: "User Not Found" });
+      logger.warn({ status: 404, message: 'Not Found' });
+      res.status(404).json({ message: 'User Not Found' });
+      return;
     }
+    logger.info({ status: 200, message: 'OK' });
     res.status(200).json(getUser);
-  } catch (error: any) {
-    serverError(error, res);
+  } catch (error: unknown) {
+    serverError(error as Error, res);
   }
 };
 
@@ -43,23 +51,25 @@ export const getUserByID = async (
 export const getUserByUsername = async (
   req: Request,
   res: Response
-): Promise<any> => {
+): Promise<void> => {
   try {
     const { username } = req.params;
 
     const user: IUser | null = await User.findOne(
       { username: username },
-      "name username country"
-    ).populate("blogs", "-author");
+      'name username country'
+    ).populate('blogs', '-author');
     if (user === null) {
-      return res.status(404).json({ message: "User not found" });
+      logger.warn({ status: 404, message: 'Not Found' });
+      res.status(404).json({ message: 'User not found' });
+      return;
     }
 
     await redisClient.setEx(username, 3600, JSON.stringify(user));
 
+    logger.info({ status: 200, message: 'OK' });
     res.status(200).json(user);
-  } catch (error: any) {
-    serverError(error, res);
+  } catch (error: unknown) {
+    serverError(error as Error, res);
   }
-
 };

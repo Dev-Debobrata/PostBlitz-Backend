@@ -13,5 +13,5 @@ const secretAccessKey = process.env.AWS_S3_BUCKET_SECRET_ACCESS_KEY;
 export const s3 = new S3({
   region,
   accessKeyId,
-  secretAccessKey,
-})
+  secretAccessKey
+});

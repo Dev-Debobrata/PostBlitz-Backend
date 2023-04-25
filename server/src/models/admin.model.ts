@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { IAdmin } from "../utils/typings";
+import { Schema, model } from 'mongoose';
+import { IAdmin } from '../utils/typings';
 
 /**
  * @description - Admin Schema
@@ -20,44 +20,44 @@ import { IAdmin } from "../utils/typings";
 const adminSchema = new Schema<IAdmin>({
   sessionId: {
     type: String,
-    required: true,
+    required: true
   },
   name: {
     type: String,
-    required: true,
+    required: true
   },
   username: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   address: {
     type: String,
-    required: true,
+    required: true
   },
   pincode: {
-    type: String,
-    required: true,
+    type: Number,
+    required: true
   },
   country: {
     type: String,
-    required: true,
+    required: true
   },
   created_At: {
     type: Number,
-    required: true,
+    required: true
   },
   updated_At: {
     type: Number,
-    required: true,
-  },
+    required: true
+  }
 });
 
-export const Admin = model<IAdmin>("Admin", adminSchema);
+export const Admin = model<IAdmin>('Admin', adminSchema);

@@ -1,43 +1,58 @@
-import { Request, Response } from "express";
-import { verifyUserToken } from "../../middleware/token";
-import { Blog } from "../../models/blog.model";
-import { User } from "../../models/user.model";
-import { serverError } from "../../utils/errorHandler";
-import { IBlog, IUser } from "../../utils/typings";
+import { Request, Response } from 'express';
+import { verifyUserToken } from '../../middleware/token';
+import { Blog } from '../../models/blog.model';
+import { User } from '../../models/user.model';
+import { serverError } from '../../utils/errorHandler';
+import { IBlog, ITokenPayload, IUser } from '../../utils/typings';
+import { logger } from '../../utils/logger';
 
 /**
  * @description This service is used to delete a blog. It will check if the user is logged in or not. If the user is logged in then it will check if the user is the author of the blog or not. If the user is the author of the blog then it will delete the blog.
  */
 
-export const deleteBlog = async (req: Request, res: Response): Promise<any> => {
+export const deleteBlog = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const sessionToken = req.cookies.sessionId;
     if (!sessionToken) {
-      return res.status(302).json({ message: "Please Log In" });
+      logger.warn({ status: 403, message: 'Forbidden' });
+      res.status(302).json({ message: 'Please Log In' });
+      return;
     }
 
-    const verifiedToken: any | undefined = await verifyUserToken(sessionToken);
+    const verifiedToken: ITokenPayload | undefined = await verifyUserToken(
+      sessionToken
+    );
 
     const getAuthor: IUser | null = await User.findOne({
-      sessionId: verifiedToken?.userId,
+      sessionId: verifiedToken?.userId
     });
     if (getAuthor === null) {
-      return res.status(404).json({ message: "User Not Found" });
+      logger.warn({ status: 404, message: 'Not Found' });
+      res.status(404).json({ message: 'User Not Found' });
+      return;
     }
 
     const { blogId } = req.params;
 
     const findBlog: IBlog | null = await Blog.findOne({ _id: blogId });
     if (findBlog === null) {
-      res.status(404).json({ message: "Blog Not Found" });
+      logger.warn({ status: 404, message: 'Not Found' });
+      res.status(404).json({ message: 'Blog Not Found' });
+      return;
     }
 
     if (findBlog?.author.toString() !== getAuthor?._id.toString()) {
-      return res.status(403).json({ message: "Unauthorized" });
+      logger.warn({ status: 401, message: 'Unauthorized' });
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
     }
     await Blog.deleteOne({ _id: blogId });
-    res.status(200).json({ message: "Blog Deleted Successfully" });
-  } catch (error: any) {
-    serverError(error, res);
+    logger.info({ status: 200, message: 'OK' });
+    res.status(200).json({ message: 'Blog Deleted Successfully' });
+  } catch (error: unknown) {
+    serverError(error as Error, res);
   }
 };

@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-import { ServerApiVersion } from 'mongodb';
 import * as mongoose from 'mongoose';
 import { logger } from './logger';
 dotenv.config({ path: __dirname + '/../../.env' });
@@ -17,12 +16,12 @@ export const connectToDatabase = async () => {
     mongoose.set('strictQuery', true);
     await mongoose.connect(`${mongoURL}`, <mongoose.ConnectOptions>{
       useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverApi: ServerApiVersion.v1
+      useUnifiedTopology: true
     });
   } catch (error: unknown) {
     logger.error({
       message: `Mongo client: Unexpected error on idle client`,
+      url: mongoURL,
       extra: error
     });
     process.exit(1);

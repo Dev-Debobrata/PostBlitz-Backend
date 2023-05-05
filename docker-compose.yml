@@ -1,39 +1,61 @@
 version: '3.7'
 
 services:
+  postblitz-api:
+    container_name: postblitz-api
+    image: destructor98/postblitz-backend:1.0.0
+    restart: always
+    depends_on:
+      - nosql-database
+      - cache
+    volumes:
+      - ./data/server-logs:/usr/server/build/logs
+    environment:
+      REDIS_URL: redis://cache:6379
+      MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
+    ports:
+      - "9000:9000"
+    networks:
+      - postblitz
+
+  nosql-database:
+    container_name: nosql-database
+    image: mongo
+    restart: always
+    volumes:
+      - ./data/nosql-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    networks:
+      - postblitz
+
+  nosql-dashboard:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@nosql-database:27017
+    networks:
+      - postblitz
+
   cache:
     container_name: redis
     image: 'redis:latest'
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-    volumes:
-      - redis_data:/redis
     ports:
       - "6379:6379"
     networks:
-      - backend
-  server:
-    container_name: postblitz-server
-    image: destructor98/postblitz-backend:1.0.0
-    restart: always
-    depends_on:
-      - cache
-    links:
-      - cache
-    environment:
-      REDIS_URL: redis://cache:6379
-    ports:
-      - "9000:9000"
-      - "9229:9229" # for debugging
-    networks:
-      - backend
+      - postblitz
 
 networks:
-  backend:
-volumes:
-  redis_data:
-  server_data:
-  node_modules:
+  postblitz:
 
 

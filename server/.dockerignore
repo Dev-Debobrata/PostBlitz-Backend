@@ -1,5 +1,8 @@
 /node_modules
-/build
 /logs
-.env
+/build
 .git
+.eslintignore
+.eslintrc
+.prettierrc
+nodemon.json

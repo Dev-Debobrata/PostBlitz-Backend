@@ -18,7 +18,26 @@ A full-stack blogging site project.
   cd PostBlitz
 ```
 
-3. Run `docker-compose up` to start the project.
+3. Add the following environment variables in your docker-compose file
+
+```bash
+  NODE_ENV: development
+  HOST: localhost
+  PORT: 9000
+  REDIS_URL: redis://cache:6379
+  MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
+  AUTH_EMAIL: EMAIL_ADDRESS_FOR_NODEMAILER
+  AUTH_PASS: PASSWORD_FOR_NODEMAILER
+  USER_ACCESS_TOKEN_SECRET: userAceessTokenSecret
+  ADMIN_ACCESS_TOKEN_SECRET: adminAccessTokenSecret
+  USER_REFRESH_TOKEN_SECRET: userRefreshTokenSecret
+  AWS_S3_BUCKET_NAME: YOUR_AWS_BUCKET_NAME
+  AWS_S3_BUCKET_REGION: YOUR_AWS_BUCKET_REGION
+  AWS_S3_BUCKET_ACCESS_KEY_ID: YOUR_AWS_BUCKET_ACCESS_KEY_ID
+  AWS_S3_BUCKET_SECRET_ACCESS_KEY: YOUR_AWS_BUCKET_SECRET_ACCESS_KEY
+```
+
+4. Run `docker-compose up` to start the project.
 
 <br />
 

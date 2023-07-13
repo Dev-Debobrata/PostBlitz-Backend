@@ -1,13 +1,12 @@
-client/node_modules
 client/.next/
 client/out/
-client/build/
-client/.env*.local
-client/.vercel
-client/next-env.d.ts
+*/.env*.local
+**/.vercel
+*/next-env.d.ts
+**/data
 
 
-server/node_modules
-server/build
-server/logs
-server/.env
+**/node_modules
+**/build
+**/logs
+*.env

@@ -1,0 +1,6 @@
+---
+- name: Configure System
+  hosts: servers
+  become: true
+  roles:
+    - postblitz-role

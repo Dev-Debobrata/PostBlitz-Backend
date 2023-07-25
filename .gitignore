@@ -4,7 +4,11 @@ client/out/
 **/.vercel
 */next-env.d.ts
 **/data
-
+**/.terraform.lock.hcl
+**/.terraform
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/**.pem
 
 **/node_modules
 **/build

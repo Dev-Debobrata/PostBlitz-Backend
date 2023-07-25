@@ -1,0 +1,205 @@
+---
+- name: Updating apt cache (for Debian-based systems) or yum cache (for RedHat-based systems)
+  apt: update_cache=yes
+  become: true
+  when: ansible_os_family == 'Debian'
+  tags: updating_cache
+
+- name: Installing required packages for Docker (for Debian-based systems)
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: true
+  when: ansible_os_family == 'Debian'
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+  tags: fetching_debian_packages
+
+- name: Adding Docker GPG key (for Debian-based systems)
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: true
+  when: ansible_os_family == 'Debian'
+  tags: adding_docker_gpg_key_for_debian
+
+- name: Adding Docker repository (for Debian-based systems)
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+    state: present
+  become: true
+  when: ansible_os_family == 'Debian'
+  tags: adding_docker_repository_for_debian
+
+- name: Installing required packages for Docker (for RedHat-based systems)
+  yum:
+    name: "{{ item }}"
+    state: present
+  become: true
+  when: ansible_os_family == 'RedHat'
+  with_items:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+  tags: fetching_redhat_packages_for_docker
+
+- name: Adding Docker repository (for RedHat-based systems)
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    enabled: yes
+    state: present
+  become: true
+  when: ansible_os_family == 'RedHat'
+  tags: adding_docker_repository_for_redhat
+
+- name: Installing Docker package
+  package:
+    name: docker-ce
+    state: present
+  become: true
+  tags: installing_docker
+
+- name: Starting and enabling Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  become: true
+  tags: starting_docker
+
+- name: Adding user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  become: true
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
+  tags: adding_user_to_docker_group
+
+- name: Copy the secrets.env file to the target host
+  copy:
+    src: /home/ubuntu/postblitz/secrets.env
+    dest: /home/ubuntu/secrets.env
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
+  become: true
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
+
+- name: Pulling "destructor98/postblitz-api-blog:2.0.0" image
+  community.docker.docker_image:
+    name: destructor98/postblitz-api-blog:2.0.0
+    source: pull
+  tags: pulling_api_blog_image
+
+- name: Pulling "destructor98/postblitz-api-user:2.0.0" image
+  community.docker.docker_image:
+    name: destructor98/postblitz-api-user:2.0.0
+    source: pull
+  tags: pulling_api_user_image
+
+- name: Pulling "destructor98/postblitz-api-admin:2.0.0" image
+  community.docker.docker_image:
+    name: destructor98/postblitz-api-admin:2.0.0
+    source: pull
+  tags: pulling_api_admin_image
+
+- name: Pulling "redis:latest" image
+  community.docker.docker_image:
+    name: redis:latest
+    source: pull
+  tags: pulling_redis_image
+
+- name: Creating network "postblitz-network"
+  community.docker.docker_network:
+    name: postblitz-network
+    state: present
+  tags: creating_network_postblitz_network
+
+- name: Creating volume "postblitz-redis-data"
+  community.docker.docker_volume:
+    name: postblitz-db-data
+    state: present
+  tags: creating_volume_redis_data
+
+- name: creating volume "postblitz-user-logs"
+  community.docker.docker_volume:
+    name: postblitz-user-logs
+    state: present
+  tags: creating_volume_user_logs
+
+- name: Creating volume "postblitz-blog-logs"
+  community.docker.docker_volume:
+    name: postblitz-blog-logs
+    state: present
+  tags: creating_volume_blog_logs
+
+- name: Creating volume "postblitz-admin-logs"
+  community.docker.docker_volume:
+    name: postblitz-admin-logs
+    state: present
+  tags: creating_volume_admin_logs
+
+- name: Running Redis container
+  community.docker.docker_container:
+    name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - postblitz-redis-data:/data
+    networks:
+      - name: postblitz-network
+    state: started
+  tags: running_redis_container
+
+- name: Running API User container
+  community.docker.docker_container:
+    name: api-user
+    image: destructor98/postblitz-api-user:2.0.0
+    ports:
+      - "9001:9001"
+    volumes:
+      - postblitz-user-logs:/usr/server/user/build/logs
+    env_file: /home/{{ ansible_user }}/secrets.env
+    networks:
+      - name: postblitz-network
+    state: started
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
+  tags: running_api_user_container
+
+- name: Running API Blog container
+  community.docker.docker_container:
+    name: api-blog
+    image: destructor98/postblitz-api-blog:2.0.0
+    ports:
+      - "9003:9003"
+    volumes:
+      - postblitz-blog-logs:/usr/server/blog/build/logs
+    env_file: /home/{{ ansible_user }}/secrets.env
+    networks:
+      - name: postblitz-network
+    state: started
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
+  tags: running_api_blog_container
+
+- name: Running API Admin container
+  community.docker.docker_container:
+    name: api-admin
+    image: destructor98/postblitz-api-admin:2.0.0
+    ports:
+      - "9002:9002"
+    volumes:
+      - postblitz-admin-logs:/usr/server/admin/build/logs
+    env_file: /home/{{ ansible_user }}/secrets.env
+    networks:
+      - name: postblitz-network
+    state: started
+  when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
+  tags: running_api_admin_container

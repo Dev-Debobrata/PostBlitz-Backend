@@ -18,14 +18,11 @@ A full-stack blogging site project.
   cd PostBlitz
 ```
 
-3. Add the following environment variables in your docker-compose file
+3. Add the following environment variables in your docker-compose file (Use it only for development we have a infrastructure folder build for usage in production using ansible and terraform)
 
-```bash
-  NODE_ENV: development
-  HOST: localhost
-  PORT: 9000
-  REDIS_URL: redis://cache:6379
-  MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
+```env
+  REDIS_URL: redis://redis:6379
+  MONGO_URL: MONGO_URL
   AUTH_EMAIL: EMAIL_ADDRESS_FOR_NODEMAILER
   AUTH_PASS: PASSWORD_FOR_NODEMAILER
   USER_ACCESS_TOKEN_SECRET: userAceessTokenSecret

@@ -12,22 +12,19 @@ services:
 
   postblitz-user-service:
     container_name: postblitz-api-user
-    image: destructor98/postblitz-api-user:1.0.0
+    image: destructor98/postblitz-api-user:2.0.0
     restart: always
     depends_on:
-      - nosql-database
-      - cache
+      - redis
     volumes:
       - ./data/server-logs:/usr/server/user/build/logs
     environment:
-      HOST: localhost
-      PORT: 9001
-      REDIS_URL: redis://cache:6379
-      MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
+      REDIS_URL: 
+      MONGO_URL: 
       AUTH_EMAIL:
       AUTH_PASS:
-      USER_ACCESS_TOKEN_SECRET: userAceessTokenSecret
-      USER_REFRESH_TOKEN_SECRET: userRefreshTokenSecret
+      USER_ACCESS_TOKEN_SECRET: 
+      USER_REFRESH_TOKEN_SECRET: 
       AWS_S3_BUCKET_NAME:
       AWS_S3_BUCKET_REGION:
       AWS_S3_BUCKET_ACCESS_KEY_ID:
@@ -35,24 +32,21 @@ services:
     ports:
       - "9001:9001"
     networks:
-      - postblitz
+      - postblitz-network
 
   postblitz-blog-service:
     container_name: postblitz-api-blog
-    image: destructor98/postblitz-api-blog:1.0.0
+    image: destructor98/postblitz-api-blog:2.0.0
     restart: always
     depends_on:
-      - nosql-database
-      - cache
+      - redis
     volumes:
       - ./data/server-logs:/usr/server/blog/build/logs
     environment:
-      HOST: localhost
-      PORT: 9003
-      REDIS_URL: redis://cache:6379
-      MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
-      USER_ACCESS_TOKEN_SECRET: userAceessTokenSecret
-      USER_REFRESH_TOKEN_SECRET: userRefreshTokenSecret
+      REDIS_URL: 
+      MONGO_URL: 
+      USER_ACCESS_TOKEN_SECRET: 
+      USER_REFRESH_TOKEN_SECRET: 
       AWS_S3_BUCKET_NAME:
       AWS_S3_BUCKET_REGION:
       AWS_S3_BUCKET_ACCESS_KEY_ID:
@@ -60,55 +54,26 @@ services:
     ports:
       - "9003:9003"
     networks:
-      - postblitz
+      - postblitz-network
 
   postblitz-admin-service:
     container_name: postblitz-api-admin
-    image: destructor98/postblitz-api-admin:1.0.0
+    image: destructor98/postblitz-api-admin:2.0.0
     restart: always
     depends_on:
-      - nosql-database
-      - cache
+      - redis
     volumes:
       - ./data/server-logs:/usr/server/admin/build/logs
     environment:
-      HOST: localhost
-      PORT: 9002
-      REDIS_URL: redis://cache:6379
-      MONGO_URL: mongodb://root:example@nosql-database:27017/postblitz-db?authSource=admin
-      ADMIN_ACCESS_TOKEN_SECRET: adminAccessTokenSecret
+      REDIS_URL: 
+      MONGO_URL: 
+      ADMIN_ACCESS_TOKEN_SECRET: 
     ports:
       - "9002:9002"
     networks:
-      - postblitz
+      - postblitz-network
 
-  nosql-database:
-    container_name: nosql-database
-    image: mongo
-    restart: always
-    volumes:
-      - ./data/nosql-data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
-    networks:
-      - postblitz
-
-  nosql-dashboard:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@nosql-database:27017
-    networks:
-      - postblitz
-
-  cache:
+  redis:
     container_name: redis
     image: 'redis:latest'
     restart: always
@@ -117,9 +82,10 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - postblitz
+      - postblitz-network
 
 networks:
-  postblitz:
+  postblitz-network:
+    driver: bridge
 
 

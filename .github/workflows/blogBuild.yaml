@@ -30,6 +30,4 @@ jobs:
         with:
           context: ./server/blog/
           push: true
-          tags: >
-            - destructor98/postblitz-api-blog:latest
-            - destructor98/postblitz-api-blog:${{ github.sha }}
+          tags: destructor98/postblitz-api-blog:latest

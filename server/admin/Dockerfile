@@ -15,8 +15,15 @@ FROM node:18.12.1-alpine3.15
 
 WORKDIR /usr/server/admin/build
 
+ENV NODE_ENV=production
+ENV HOST=localhost
+ENV PORT=9002
+ENV REDIS_URL=
+ENV MONGO_URL=
+ENV ADMIN_ACCESS_TOKEN_SECRET=
+
 COPY package.json yarn.lock /usr/server/admin/build/
-COPY --from=builder usr/server/admin/.env /usr/server/admin/build/ /usr/server/admin/build/
+COPY --from=builder /usr/server/admin/build/ /usr/server/admin/build/
 RUN yarn install --production
 
 EXPOSE 9002

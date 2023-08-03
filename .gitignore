@@ -4,6 +4,7 @@ client/out/
 **/.vercel
 */next-env.d.ts
 **/data
+**/.terraform.tfstate.lock.info
 **/.terraform.lock.hcl
 **/.terraform
 **/terraform.tfstate

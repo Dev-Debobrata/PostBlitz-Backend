@@ -133,47 +133,6 @@ resource "aws_instance" "server" {
   }
 }
 
-# Launch Template For Servers
-resource "aws_launch_template" "server_lc" {
-  name_prefix            = "server-lc"
-  image_id               = "ami-0f5ee92e2d63afc18"
-  instance_type          = var.aws-instance-type
-  key_name               = aws_key_pair.tf-key-pair.key_name
-  vpc_security_group_ids = [aws_security_group.server.id]
-  user_data              = base64encode(file("userData.sh"))
-}
-
-# Autoscaling Group for Port 9001
-resource "aws_autoscaling_group" "asg_9001" {
-  name                = "asg-9001"
-  vpc_zone_identifier = var.aws-subnet-id
-  min_size            = 1
-  max_size            = 3
-
-  launch_template {
-    id      = aws_launch_template.server_lc.id
-    version = "$Latest"
-  }
-}
-
-# Autoscaling Group for Port 9002
-resource "aws_autoscaling_group" "asg_9002" {
-  name                 = "asg-9002"
-  launch_configuration = aws_launch_template.server_lc.name
-  vpc_zone_identifier  = var.aws-subnet-id
-  min_size             = 1
-  max_size             = 3
-}
-
-# Autoscaling Group for Port 9003
-resource "aws_autoscaling_group" "asg_9003" {
-  name                 = "asg-9003"
-  launch_configuration = aws_launch_template.server_lc.name
-  vpc_zone_identifier  = var.aws-subnet-id
-  min_size             = 1
-  max_size             = 3
-}
-
 # Load Balancer Security Group
 resource "aws_security_group" "alb_sg" {
   name        = "alb_sg"
@@ -241,7 +200,7 @@ resource "aws_lb_listener_rule" "listener_rule_9001" {
 
   condition {
     path_pattern {
-      values = ["/api/user*"]
+      values = ["/api/users*"]
     }
   }
 }
@@ -255,9 +214,17 @@ resource "aws_lb_target_group" "tg_9001" {
   target_type = "instance"
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_9001" {
+resource "aws_lb_target_group_attachment" "tg_attachment_9001-0" {
   target_group_arn = aws_lb_target_group.tg_9001.arn
-  target_id        = aws_autoscaling_group.asg_9001.*.instances[count.index].id
+  target_id        = aws_instance.server[0].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9001-1" {
+  target_group_arn = aws_lb_target_group.tg_9001.arn
+  target_id        = aws_instance.server[1].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9001-2" {
+  target_group_arn = aws_lb_target_group.tg_9001.arn
+  target_id        = aws_instance.server[2].id
 }
 
 # Load Balancer Listener for port 9002
@@ -287,7 +254,7 @@ resource "aws_lb_listener_rule" "listener_rule_9002" {
 
   condition {
     path_pattern {
-      values = ["/api/admin*"]
+      values = ["/api/admins*"]
     }
   }
 }
@@ -301,9 +268,17 @@ resource "aws_lb_target_group" "tg_9002" {
   target_type = "instance"
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_9002" {
+resource "aws_lb_target_group_attachment" "tg_attachment_9002-0" {
   target_group_arn = aws_lb_target_group.tg_9002.arn
-  target_id        = aws_autoscaling_group.asg_9002.*.instances[count.index].id
+  target_id        = aws_instance.server[0].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9002-1" {
+  target_group_arn = aws_lb_target_group.tg_9002.arn
+  target_id        = aws_instance.server[1].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9002-2" {
+  target_group_arn = aws_lb_target_group.tg_9002.arn
+  target_id        = aws_instance.server[2].id
 }
 
 # Load Balancer Listener for port 9003
@@ -333,7 +308,7 @@ resource "aws_lb_listener_rule" "listener_rule_9003" {
 
   condition {
     path_pattern {
-      values = ["/api/blog*"]
+      values = ["/api/blogs*"]
     }
   }
 }
@@ -347,7 +322,15 @@ resource "aws_lb_target_group" "tg_9003" {
   target_type = "instance"
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_9003" {
+resource "aws_lb_target_group_attachment" "tg_attachment_9003-0" {
   target_group_arn = aws_lb_target_group.tg_9003.arn
-  target_id        = aws_autoscaling_group.asg_9003.*.instances[count.index].id
+  target_id        = aws_instance.server[0].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9003-1" {
+  target_group_arn = aws_lb_target_group.tg_9003.arn
+  target_id        = aws_instance.server[1].id
+}
+resource "aws_lb_target_group_attachment" "tg_attachment_9003-2" {
+  target_group_arn = aws_lb_target_group.tg_9003.arn
+  target_id        = aws_instance.server[2].id
 }

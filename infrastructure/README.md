@@ -30,20 +30,28 @@ terraform apply
   AWS_S3_BUCKET_SECRET_ACCESS_KEY: YOUR_AWS_BUCKET_SECRET_ACCESS_KEY
 ```
 
-3. run:
+3. Log in to your EC2 instance using ssh and run:
+
+```bash
+ssh -i ./cloud-infrastructure/tf-key-pair.pem ubuntu@<your-ec2-instance-public-ip>
+```
+
+4. Create two directories:
+
+```bash
+mkdir postblitz
+cd postblitz
+mkdir postblitz-role
+```
+
+5. return to infrastructure directory and run:
 
 ```bash
 sudo chmod +x fileSender.sh
 ./fileSender.sh
 ```
 
-4. Log in to your EC2 instance using ssh and run:
-
-```bash
-ssh -i ./cloud-infrastructure/tf-key-pair.pem ubuntu@<your-ec2-instance-public-ip>
-```
-
-5. Go to Postblitz folder and add private ip of the servers under [servers] in inventory file.
+5. Go to Postblitz folder in the EC2 instance and add private ip of the servers under [servers] in inventory file.
 
 6. Now make tf-key-pair.pem executable:
 

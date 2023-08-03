@@ -9,5 +9,5 @@ variable "aws-subnet-id" {
 
 variable "aws-instance-type" {
   type    = string
-  default = "t3a.medium"
+  default = "t2.micro"
 }

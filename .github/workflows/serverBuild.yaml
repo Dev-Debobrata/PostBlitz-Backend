@@ -1,0 +1,55 @@
+name: Building Servers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "server/**"
+
+jobs:
+  serverBuild:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checking out repository
+        uses: actions/checkout@v2
+
+      - name: Setting up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Pushing User Server Image
+        uses: docker/build-push-action@v4
+        if: ${{ contains(github.event.head_commit.modified, 'server/user/') }}
+        with:
+          context: ./server/user/
+          push: true
+          tags: >
+            - destructor98/postblitz-api-user:latest
+            - destructor98/postblitz-api-user:${{ github.sha }}
+
+      - name: Pushing Blog Server Image
+        uses: docker/build-push-action@v4
+        if: ${{ contains(github.event.head_commit.modified, 'server/blog/') }}
+        with:
+          context: ./server/blog/
+          push: true
+          tags: >
+            - destructor98/postblitz-api-blog:latest
+            - destructor98/postblitz-api-blog:${{ github.sha }}
+
+      - name: Pushing Admin Server Image
+        uses: docker/build-push-action@v4
+        if: ${{ contains(github.event.head_commit.modified, 'server/admin/') }}
+        with:
+          context: ./server/admin/
+          push: true
+          tags: >
+            - destructor98/postblitz-api-admin:latest
+            - destructor98/postblitz-api-admin:${{ github.sha }}

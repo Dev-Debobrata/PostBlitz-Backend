@@ -7,10 +7,12 @@ client/out/
 **/.terraform.lock.hcl
 **/.terraform
 **/terraform.tfstate
-**/terraform.tfstate.backup
+**/terraform.tfstate.**
+**/terraform.tfstate.**.backup
 **/**.pem
 
 **/node_modules
 **/build
 **/logs
 *.env
+.secrets

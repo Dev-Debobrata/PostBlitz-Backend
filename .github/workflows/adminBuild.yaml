@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "server/**"
+      - "server/admin/**"
 
 jobs:
   serverBuild:
@@ -23,26 +23,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Pushing User Server Image
-        uses: docker/build-push-action@v4
-        if: ${{ contains(github.event.head_commit.modified, 'server/user/') }}
-        with:
-          context: ./server/user/
-          push: true
-          tags: >
-            - destructor98/postblitz-api-user:latest
-            - destructor98/postblitz-api-user:${{ github.sha }}
-
-      - name: Pushing Blog Server Image
-        uses: docker/build-push-action@v4
-        if: ${{ contains(github.event.head_commit.modified, 'server/blog/') }}
-        with:
-          context: ./server/blog/
-          push: true
-          tags: >
-            - destructor98/postblitz-api-blog:latest
-            - destructor98/postblitz-api-blog:${{ github.sha }}
 
       - name: Pushing Admin Server Image
         uses: docker/build-push-action@v4

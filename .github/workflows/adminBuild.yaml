@@ -1,4 +1,4 @@
-name: Building Servers
+name: Building Admin Servers
 
 on:
   push:

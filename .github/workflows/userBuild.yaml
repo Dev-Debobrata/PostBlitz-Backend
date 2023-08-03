@@ -1,4 +1,4 @@
-name: Building User
+name: Building User Server
 
 on:
   push:
@@ -24,11 +24,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Pushing User Server Image
+      - name: Pushing User Server Image as Latest
         uses: docker/build-push-action@v4
         with:
           context: ./server/user/
           push: true
-          tags: >
-            - destructor98/postblitz-api-user:latest
-            - destructor98/postblitz-api-user:${{ github.sha }}
+          tags: destructor98/postblitz-api-user:latest

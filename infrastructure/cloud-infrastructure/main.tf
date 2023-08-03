@@ -7,10 +7,13 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region  = "ap-south-1"
   profile = "default"
+}
+
+data "aws_vpc" "default" {
+  default = true
 }
 
 # Key Pair Generation
@@ -33,7 +36,7 @@ resource "local_file" "tf-key" {
 resource "aws_security_group" "ansible" {
   name        = "ansible"
   description = "Allow SSH"
-  vpc_id      = "vpc-04bdcfbb9286ed26d"
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description = "SSH from VPC"
@@ -58,7 +61,7 @@ resource "aws_security_group" "ansible" {
 # Ansible Control instance EC2
 resource "aws_instance" "ansible" {
   ami                    = "ami-0f5ee92e2d63afc18"
-  instance_type          = "t2.micro"
+  instance_type          = var.aws-instance-type
   key_name               = aws_key_pair.tf-key-pair.key_name
   vpc_security_group_ids = [aws_security_group.ansible.id]
   user_data              = file("userData.sh")
@@ -71,7 +74,7 @@ resource "aws_instance" "ansible" {
 resource "aws_security_group" "server" {
   name        = "server"
   description = "Allow SSH"
-  vpc_id      = "vpc-04bdcfbb9286ed26d"
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description     = "SSH from VPC"
@@ -121,11 +124,230 @@ resource "aws_security_group" "server" {
 # Server EC2
 resource "aws_instance" "server" {
   ami                    = "ami-0f5ee92e2d63afc18"
-  instance_type          = "t2.micro"
+  instance_type          = var.aws-instance-type
   count                  = 3
   key_name               = aws_key_pair.tf-key-pair.key_name
   vpc_security_group_ids = [aws_security_group.server.id]
   tags = {
     Name = "server-${count.index + 1}"
   }
+}
+
+# Launch Template For Servers
+resource "aws_launch_template" "server_lc" {
+  name_prefix            = "server-lc"
+  image_id               = "ami-0f5ee92e2d63afc18"
+  instance_type          = var.aws-instance-type
+  key_name               = aws_key_pair.tf-key-pair.key_name
+  vpc_security_group_ids = [aws_security_group.server.id]
+  user_data              = base64encode(file("userData.sh"))
+}
+
+# Autoscaling Group for Port 9001
+resource "aws_autoscaling_group" "asg_9001" {
+  name                = "asg-9001"
+  vpc_zone_identifier = var.aws-subnet-id
+  min_size            = 1
+  max_size            = 3
+
+  launch_template {
+    id      = aws_launch_template.server_lc.id
+    version = "$Latest"
+  }
+}
+
+# Autoscaling Group for Port 9002
+resource "aws_autoscaling_group" "asg_9002" {
+  name                 = "asg-9002"
+  launch_configuration = aws_launch_template.server_lc.name
+  vpc_zone_identifier  = var.aws-subnet-id
+  min_size             = 1
+  max_size             = 3
+}
+
+# Autoscaling Group for Port 9003
+resource "aws_autoscaling_group" "asg_9003" {
+  name                 = "asg-9003"
+  launch_configuration = aws_launch_template.server_lc.name
+  vpc_zone_identifier  = var.aws-subnet-id
+  min_size             = 1
+  max_size             = 3
+}
+
+# Load Balancer Security Group
+resource "aws_security_group" "alb_sg" {
+  name        = "alb_sg"
+  description = "Allow HTTP & HTTPS"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "HTTP"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Load Balancer
+resource "aws_lb" "alb" {
+  name            = "postblitz-load-balancer"
+  subnets         = var.aws-subnet-id
+  security_groups = [aws_security_group.alb_sg.id]
+  internal        = false
+}
+
+# Load Balancer Listener for port 9001
+resource "aws_lb_listener" "listener_9001" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Resource not found."
+      status_code  = "404"
+    }
+  }
+}
+
+
+resource "aws_lb_listener_rule" "listener_rule_9001" {
+  listener_arn = aws_lb_listener.listener_9001.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_9001.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/user*"]
+    }
+  }
+}
+
+# Target Group 9001 attachment with the Load Balancer
+resource "aws_lb_target_group" "tg_9001" {
+  name        = "target-group-9001"
+  port        = 9001
+  protocol    = "HTTP"
+  vpc_id      = data.aws_vpc.default.id
+  target_type = "instance"
+}
+
+resource "aws_lb_target_group_attachment" "tg_attachment_9001" {
+  target_group_arn = aws_lb_target_group.tg_9001.arn
+  target_id        = aws_autoscaling_group.asg_9001.*.instances[count.index].id
+}
+
+# Load Balancer Listener for port 9002
+resource "aws_lb_listener" "listener_9002" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Resource not found."
+      status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "listener_rule_9002" {
+  listener_arn = aws_lb_listener.listener_9002.arn
+  priority     = 101
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_9002.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/admin*"]
+    }
+  }
+}
+
+# Target Group 9002 attachment with the Load Balancer
+resource "aws_lb_target_group" "tg_9002" {
+  name        = "target-group-9002"
+  port        = 9002
+  protocol    = "HTTP"
+  vpc_id      = data.aws_vpc.default.id
+  target_type = "instance"
+}
+
+resource "aws_lb_target_group_attachment" "tg_attachment_9002" {
+  target_group_arn = aws_lb_target_group.tg_9002.arn
+  target_id        = aws_autoscaling_group.asg_9002.*.instances[count.index].id
+}
+
+# Load Balancer Listener for port 9003
+resource "aws_lb_listener" "listener_9003" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Resource not found."
+      status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "listener_rule_9003" {
+  listener_arn = aws_lb_listener.listener_9003.arn
+  priority     = 102
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_9003.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/blog*"]
+    }
+  }
+}
+
+# Target Group 9003 attachment with the Load Balancer
+resource "aws_lb_target_group" "tg_9003" {
+  name        = "target-group-9003"
+  port        = 9003
+  protocol    = "HTTP"
+  vpc_id      = data.aws_vpc.default.id
+  target_type = "instance"
+}
+
+resource "aws_lb_target_group_attachment" "tg_attachment_9003" {
+  target_group_arn = aws_lb_target_group.tg_9003.arn
+  target_id        = aws_autoscaling_group.asg_9003.*.instances[count.index].id
 }

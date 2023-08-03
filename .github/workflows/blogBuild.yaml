@@ -8,7 +8,7 @@ on:
       - "server/blog/**"
 
 jobs:
-  serverBuild:
+  blogBuild:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,4 +30,6 @@ jobs:
         with:
           context: ./server/blog/
           push: true
-          tags: destructor98/postblitz-api-blog:latest
+          tags: |
+            destructor98/postblitz-api-blog:latest
+            destructor98/postblitz-api-blog:${{ github.sha }}

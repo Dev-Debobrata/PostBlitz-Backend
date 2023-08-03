@@ -8,7 +8,7 @@ on:
       - "server/admin/**"
 
 jobs:
-  serverBuild:
+  adminBuild:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,4 +30,6 @@ jobs:
         with:
           context: ./server/admin/
           push: true
-          tags: destructor98/postblitz-api-admin:latest
+          tags: |
+            destructor98/postblitz-api-admin:latest
+            destructor98/postblitz-api-admin:${{ github.sha }}

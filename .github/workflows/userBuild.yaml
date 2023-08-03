@@ -8,7 +8,7 @@ on:
       - "server/user/**"
 
 jobs:
-  serverBuild:
+  userBuild:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,9 +24,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: name/app
+
       - name: Pushing User Server Image as Latest
         uses: docker/build-push-action@v4
         with:
           context: ./server/user/
           push: true
           tags: destructor98/postblitz-api-user:latest
+
+      - name: Build and Push Image with GitHub SHA Tag
+        uses: docker/build-push-action@v4
+        with:
+          context: ./server/user/
+          push: true
+          tags: |
+            destructor98/postblitz-api-user:latest
+            destructor98/postblitz-api-user:${{ github.sha }}

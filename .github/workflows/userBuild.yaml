@@ -30,13 +30,6 @@ jobs:
         with:
           images: name/app
 
-      - name: Pushing User Server Image as Latest
-        uses: docker/build-push-action@v4
-        with:
-          context: ./server/user/
-          push: true
-          tags: destructor98/postblitz-api-user:latest
-
       - name: Build and Push Image with GitHub SHA Tag
         uses: docker/build-push-action@v4
         with:

@@ -26,7 +26,6 @@ jobs:
 
       - name: Pushing Admin Server Image
         uses: docker/build-push-action@v4
-        if: ${{ contains(github.event.head_commit.modified, 'server/admin/') }}
         with:
           context: ./server/admin/
           push: true

@@ -26,7 +26,6 @@ jobs:
 
       - name: Pushing Blog Server Image
         uses: docker/build-push-action@v4
-        if: ${{ contains(github.event.head_commit.modified, 'server/blog/') }}
         with:
           context: ./server/blog/
           push: true

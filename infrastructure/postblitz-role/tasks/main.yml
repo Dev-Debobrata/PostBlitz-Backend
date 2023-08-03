@@ -92,21 +92,21 @@
   become: true
   when: ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'
 
-- name: Pulling "destructor98/postblitz-api-blog:2.0.0" image
+- name: Pulling "destructor98/postblitz-api-blog" image
   community.docker.docker_image:
-    name: destructor98/postblitz-api-blog:2.0.0
+    name: destructor98/postblitz-api-blog:latest
     source: pull
   tags: pulling_api_blog_image
 
-- name: Pulling "destructor98/postblitz-api-user:2.0.0" image
+- name: Pulling "destructor98/postblitz-api-user" image
   community.docker.docker_image:
-    name: destructor98/postblitz-api-user:2.0.0
+    name: destructor98/postblitz-api-user:latest
     source: pull
   tags: pulling_api_user_image
 
-- name: Pulling "destructor98/postblitz-api-admin:2.0.0" image
+- name: Pulling "destructor98/postblitz-api-admin" image
   community.docker.docker_image:
-    name: destructor98/postblitz-api-admin:2.0.0
+    name: destructor98/postblitz-api-admin:latest
     source: pull
   tags: pulling_api_admin_image
 

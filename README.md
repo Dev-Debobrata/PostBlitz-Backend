@@ -52,4 +52,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Authors
 
-- [@Dev-Destructor](https://www.github.com/Dev-Destructor)
+- [Dev-Destructor](https://www.github.com/Dev-Destructor)

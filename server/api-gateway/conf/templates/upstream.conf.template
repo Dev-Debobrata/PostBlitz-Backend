@@ -1,0 +1,11 @@
+upstream user_server {
+    server ${SERVER_HOST}:9001;
+}
+
+upstream admin_server {
+    server ${SERVER_HOST}:9002;
+}
+
+upstream blog_server {
+    server ${SERVER_HOST}:9003;
+}

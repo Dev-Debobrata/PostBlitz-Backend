@@ -1,7 +1,7 @@
 {
-  "name": "postblitz-backend",
+  "name": "postblitz-blog-microservice",
   "version": "1.0.0",
-  "description": "Backend for project PostBlitz",
+  "description": "Blog Microservice for project PostBlitz",
   "main": "index.ts",
   "scripts": {
     "start": "node index.js",

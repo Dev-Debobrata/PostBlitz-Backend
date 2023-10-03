@@ -1,6 +1,19 @@
 version: '3.7'
 
 services:
+  api-gateway:
+    container_name: postblitz-api-gateway
+    image: destructor98/postblitz-api-gateway
+    restart: always
+    volumes:
+      - ./server/api-gateway/conf/templates:/etc/nginx/templates
+    env_file:
+      - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/gateway.env
+    ports:
+      - "80:80"
+    networks:
+      - postblitz-network
+
   # postblitz-web:
   #   container_name: postblitz-web
   #   image: destructor98/postblitz-frontend:1.0.0
@@ -12,23 +25,14 @@ services:
 
   postblitz-user-service:
     container_name: postblitz-api-user
-    image: destructor98/postblitz-api-user:2.0.0
+    image: destructor98/postblitz-api-user
     restart: always
     depends_on:
       - redis
     volumes:
       - ./data/server-logs:/usr/server/user/build/logs
-    environment:
-      REDIS_URL: 
-      MONGO_URL: 
-      AUTH_EMAIL:
-      AUTH_PASS:
-      USER_ACCESS_TOKEN_SECRET: 
-      USER_REFRESH_TOKEN_SECRET: 
-      AWS_S3_BUCKET_NAME:
-      AWS_S3_BUCKET_REGION:
-      AWS_S3_BUCKET_ACCESS_KEY_ID:
-      AWS_S3_BUCKET_SECRET_ACCESS_KEY:
+    env_file:
+      - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/secrets.env
     ports:
       - "9001:9001"
     networks:
@@ -36,21 +40,14 @@ services:
 
   postblitz-blog-service:
     container_name: postblitz-api-blog
-    image: destructor98/postblitz-api-blog:2.0.0
+    image: destructor98/postblitz-api-blog
     restart: always
     depends_on:
       - redis
     volumes:
       - ./data/server-logs:/usr/server/blog/build/logs
-    environment:
-      REDIS_URL: 
-      MONGO_URL: 
-      USER_ACCESS_TOKEN_SECRET: 
-      USER_REFRESH_TOKEN_SECRET: 
-      AWS_S3_BUCKET_NAME:
-      AWS_S3_BUCKET_REGION:
-      AWS_S3_BUCKET_ACCESS_KEY_ID:
-      AWS_S3_BUCKET_SECRET_ACCESS_KEY:
+    env_file:
+      - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/secrets.env
     ports:
       - "9003:9003"
     networks:
@@ -58,16 +55,14 @@ services:
 
   postblitz-admin-service:
     container_name: postblitz-api-admin
-    image: destructor98/postblitz-api-admin:2.0.0
+    image: destructor98/postblitz-api-admin
     restart: always
     depends_on:
       - redis
     volumes:
       - ./data/server-logs:/usr/server/admin/build/logs
-    environment:
-      REDIS_URL: 
-      MONGO_URL: 
-      ADMIN_ACCESS_TOKEN_SECRET: 
+    env_file:
+      - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/secrets.env
     ports:
       - "9002:9002"
     networks:

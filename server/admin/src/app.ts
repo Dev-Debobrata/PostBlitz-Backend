@@ -10,7 +10,6 @@ import cors from 'cors';
 import * as helmet from 'helmet';
 import { connectToDatabase } from './utils/dbConfig';
 import { adminRouter } from './routes/admin.routes';
-import { corsConfigADMIN } from './middleware/corsConfig';
 import { logger } from './utils/logger';
 import { redisClient } from './utils/redisConfig';
 
@@ -25,6 +24,12 @@ redisClient
   .then(() => logger.info({ message: 'Redis Connected' }))
   .catch((error) => logger.error({ message: error.message }));
 
+app.use(cors(
+  {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }
+));
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cookieParser());
@@ -43,7 +48,6 @@ app.use(
 );
 app.use(helmet.crossOriginEmbedderPolicy());
 app.use(helmet.crossOriginOpenerPolicy());
-app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' }));
 app.use(
   helmet.frameguard({
     action: 'deny'
@@ -71,7 +75,7 @@ app.use(
 );
 app.use(helmet.xssFilter());
 
-app.use('/api', cors(corsConfigADMIN), adminRouter);
+app.use('/api', adminRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world!');

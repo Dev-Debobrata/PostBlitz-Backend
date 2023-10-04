@@ -11,7 +11,6 @@ import { blogRouter } from './routes/blog.routes';
 import { connectToDatabase } from './utils/dbConfig';
 import { logger } from './utils/logger';
 import { redisClient } from './utils/redisConfig';
-import { corsConfigBLOGS } from './middleware/corsConfig';
 import cors from 'cors';
 
 export const app: Application = express();
@@ -25,6 +24,12 @@ redisClient
   .then(() => logger.info({ message: 'Redis Connected' }))
   .catch((error) => logger.error({ message: error.message }));
 
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  })
+);
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cookieParser());
@@ -43,7 +48,6 @@ app.use(
 );
 app.use(helmet.crossOriginEmbedderPolicy());
 app.use(helmet.crossOriginOpenerPolicy());
-app.use(helmet.crossOriginResourcePolicy({ policy: 'same-site' }));
 app.use(
   helmet.frameguard({
     action: 'deny'
@@ -71,7 +75,7 @@ app.use(
 );
 app.use(helmet.xssFilter());
 
-app.use('/api', cors(corsConfigBLOGS), blogRouter);
+app.use('/api', blogRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world!');

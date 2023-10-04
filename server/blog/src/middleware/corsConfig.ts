@@ -10,17 +10,7 @@ import { CorsOptions } from 'cors';
  * @returns {CorsOptions} Cors config
  */
 
-/**
- * @description Cors config for admin
- * @constructor
- * @param {CorsOptions} allowedHeaders - Allowed HTTP headers
- * @param {CorsOptions} origin - Origin
- * @param {CorsOptions} methods - Methods
- * @param {CorsOptions} credentials - Credentials
- * @returns {CorsOptions} Cors config
- */
-
-export const corsConfigADMIN: CorsOptions = {
+export const corsConfigBLOGS: CorsOptions = {
   allowedHeaders: [
     'Origin',
     'X-Requested-With',
@@ -28,7 +18,7 @@ export const corsConfigADMIN: CorsOptions = {
     'Accept',
     'X-Access-Token'
   ],
-  origin: "*",
+  origin: `*`,
   methods: 'GET,PATCH,POST,DELETE',
   credentials: true
 };

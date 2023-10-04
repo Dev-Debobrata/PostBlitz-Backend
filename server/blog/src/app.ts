@@ -11,7 +11,8 @@ import { blogRouter } from './routes/blog.routes';
 import { connectToDatabase } from './utils/dbConfig';
 import { logger } from './utils/logger';
 import { redisClient } from './utils/redisConfig';
-require('./models/user.model');
+import { corsConfigBLOGS } from './middleware/corsConfig';
+import cors from 'cors';
 
 export const app: Application = express();
 
@@ -70,7 +71,7 @@ app.use(
 );
 app.use(helmet.xssFilter());
 
-app.use('/api', blogRouter);
+app.use('/api', cors(corsConfigBLOGS), blogRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world!');

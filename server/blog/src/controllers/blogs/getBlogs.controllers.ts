@@ -13,7 +13,7 @@ export const getBlogs = async (req: Request, res: Response): Promise<void> => {
   try {
     const blogs: Array<IBlog> | null = await Blog.find({}).populate(
       'author',
-      '-_id name username'
+      '-_id name username image'
     );
     if (blogs === null) {
       logger.warn({ status: 404, message: 'Not Found' });
@@ -42,7 +42,7 @@ export const getBlogById = async (
     const { _id } = req.params;
     const blog: IBlog | null = await Blog.findById({ _id: _id }).populate(
       'author',
-      'name username'
+      'name username image'
     );
     if (blog === null) {
       logger.warn({ status: 404, message: 'Not Found' });
@@ -68,7 +68,7 @@ export const getBlogByTitle = async (
     const { title } = req.params;
     const blog: Array<IBlog> | null = await Blog.find({
       title: { $regex: new RegExp(title.replace(/\s+/g, '\\s+'), 'gi') }
-    }).populate('author', 'name username');
+    }).populate('author', 'name username image');
     if (blog === null) {
       logger.warn({ status: 404, message: 'Not Found' });
       res.status(404).json({ message: 'Blog not found' });
@@ -95,7 +95,7 @@ export const getBlogByCategory = async (
       categories: {
         $regex: new RegExp(category.replace(/\s+/g, '\\s+'), 'gi')
       }
-    }).populate('author', 'name username');
+    }).populate('author', 'name username image');
     if (blog === null) {
       logger.warn({ status: 404, message: 'Not Found' });
       res.status(404).json({ message: 'Blog not found' });

@@ -1,7 +1,12 @@
+const { hostname } = require("os");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["post-blitz.s3.ap-northeast-1.amazonaws.com"],
+    domains: [
+      "images.unsplash.com",
+      "post-blitz.s3.ap-northeast-1.amazonaws.com",
+    ],
   },
 };
 

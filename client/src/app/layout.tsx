@@ -1,39 +1,34 @@
-import Navbar from "@/components/Navbar";
-import "./globals.css";
-import { Roboto_Slab, Ubuntu } from "next/font/google";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/navbar/Navbar";
+import "@/app/globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Footer from "@/components/footer/Footer";
+import { getBlogs } from "@/helpers/getBlogs";
 
-const ubuntu = Ubuntu({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-ubuntu",
+const inter = Inter({
+  weight: ["400", "700", "500", "600", "800", "900", "100", "200", "300"],
+  subsets: ["latin-ext"],
 });
 
-const roboto_slab = Roboto_Slab({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-roboto-slab",
-});
-
-export const metadata = {
+export const metadata: Metadata = {
   title: "Postblitz",
-  description: "A simple, fast, and free blogging platform.",
+  description: "Blog website for tech solutions",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const blogs = await getBlogs();
+
   return (
-    <html
-      lang="en"
-      className={`${roboto_slab.variable} ${ubuntu.variable}`}
-      data-theme="corporate"
-    >
-      <body>
+    <html lang="en">
+      <body
+        className={`${inter.className} relative bg-[url('/bg.png')] bg-cover bg-center`}
+      >
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        {children}
         <Footer />
       </body>
     </html>

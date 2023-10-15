@@ -3,10 +3,8 @@ version: '3.7'
 services:
   api-gateway:
     container_name: postblitz-api-gateway
-    image: destructor98/postblitz-api-gateway
+    image: test-gateway:latest
     restart: always
-    volumes:
-      - ./server/api-gateway/conf/templates:/etc/nginx/templates
     env_file:
       - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/gateway.env
     ports:

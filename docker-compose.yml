@@ -3,7 +3,7 @@ version: '3.7'
 services:
   api-gateway:
     container_name: postblitz-api-gateway
-    image: test-gateway:latest
+    image: destructor98/postblitz-api-gateway
     restart: always
     env_file:
       - /home/destructor/Desktop/IT/Dev/PostBlitz/infrastructure/gateway.env
@@ -11,15 +11,6 @@ services:
       - "80:80"
     networks:
       - postblitz-network
-
-  # postblitz-web:
-  #   container_name: postblitz-web
-  #   image: destructor98/postblitz-frontend:1.0.0
-  #   restart: always
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - postblitz
 
   postblitz-user-service:
     container_name: postblitz-api-user
